@@ -18,6 +18,7 @@ public class GuildService {
 
     @Transactional
     public void updateGuild(Long guildId, String name) {
-        guildRepository.save(Guild.of(guildId, name));
+        guildRepository.findById(guildId)
+            .ifPresent(guild -> guild.updateName(name));
     }
 }

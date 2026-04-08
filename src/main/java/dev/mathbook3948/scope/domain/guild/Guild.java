@@ -40,4 +40,8 @@ public class Guild {
         guild.name = name;
         return guild;
     }
+
+    public void updateName(String name) {
+        this.name = name;
+    }
 }
