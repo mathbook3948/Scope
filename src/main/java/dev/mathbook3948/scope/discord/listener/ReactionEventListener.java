@@ -18,6 +18,7 @@ public class ReactionEventListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemove(MessageReactionRemoveEvent event) {
+        if (event.getUser() != null && event.getUser().isBot()) return;
         // TODO: facade에 위임 — 리액션 취소 기록
     }
 }
