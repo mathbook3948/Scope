@@ -1,5 +1,7 @@
 package dev.mathbook3948.scope.domain.guild;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class GuildService {
 
     private final GuildRepository guildRepository;
+
+    public List<Guild> findAll() {
+        return guildRepository.findAll();
+    }
 
     @Transactional
     public void createGuild(Long guildId, String name) {

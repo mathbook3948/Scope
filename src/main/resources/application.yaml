@@ -24,3 +24,6 @@ jobrunr:
 scope:
   discord:
     token:
+  job:
+    guild-member-stat: "0 * * * *"
+

@@ -28,4 +28,8 @@ public class GuildMemberService {
     public void deleteGuildMember(Long guildId, Long memberId) {
         guildMemberRepository.deleteByGuild_GuildIdAndMemberId(guildId, memberId);
     }
+
+    public int countByGuildId(Long guildId) {
+        return guildMemberRepository.countByGuild_GuildId(guildId);
+    }
 }

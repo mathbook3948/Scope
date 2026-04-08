@@ -9,4 +9,6 @@ public interface GuildMemberRepository extends JpaRepository<GuildMember, Long> 
     Optional<GuildMember> findByGuild_GuildIdAndMemberId(Long guildId, Long memberId);
 
     void deleteByGuild_GuildIdAndMemberId(Long guildId, Long memberId);
+
+    int countByGuild_GuildId(Long guildId);
 }
