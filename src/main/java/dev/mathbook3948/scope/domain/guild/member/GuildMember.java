@@ -54,8 +54,11 @@ public class GuildMember {
         return guildMember;
     }
 
-    public void update(String name, String avatarUrl) {
+    public void updateName(String name) {
         this.name = name;
+    }
+
+    public void updateAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
 }

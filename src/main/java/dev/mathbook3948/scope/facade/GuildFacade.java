@@ -30,12 +30,12 @@ public class GuildFacade {
 
     @Transactional
     public void upsertMember(Long guildId, Long memberId, String name, String avatarUrl) {
-        guildMemberService.createGuildMember(guildId, memberId, name, avatarUrl);
+        guildMemberService.upsertGuildMember(guildId, memberId, name, avatarUrl);
     }
 
     @Transactional
     public void onGuildMemberJoin(Long guildId, Long memberId, String name, String avatarUrl) {
-        guildMemberService.createGuildMember(guildId, memberId, name, avatarUrl);
+        guildMemberService.upsertGuildMember(guildId, memberId, name, avatarUrl);
         guildMemberEventService.createMemberJoinEvent(guildId, memberId);
     }
 
