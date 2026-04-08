@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface GuildMemberStatRepository extends JpaRepository<GuildMemberStat, Long> {
 
     Optional<GuildMemberStat> findTopByGuild_GuildIdOrderByCreatedAtDesc(Long guildId);
+
+    void deleteAllByGuild_GuildId(Long guildId);
 }

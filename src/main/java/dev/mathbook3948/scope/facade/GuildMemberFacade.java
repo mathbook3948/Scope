@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dev.mathbook3948.scope.domain.guild.GuildService;
+import dev.mathbook3948.scope.domain.guild.member.GuildMember;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventService;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventType;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberService;
@@ -32,13 +33,15 @@ public class GuildMemberFacade {
     @Transactional
     public void onGuildMemberJoin(Long guildId, Long memberId, String name, String avatarUrl) {
         guildMemberService.upsertGuildMember(guildId, memberId, name, avatarUrl);
-        guildMemberEventService.createMemberJoinEvent(guildId, memberId);
+        GuildMember member = guildMemberService.findByGuildIdAndMemberId(guildId, memberId);
+        guildMemberEventService.createMemberEvent(member.getGuild(), member, GuildMemberEventType.JOIN);
     }
 
     @Transactional
     public void onGuildMemberRemove(Long guildId, Long memberId) {
+        GuildMember member = guildMemberService.findByGuildIdAndMemberId(guildId, memberId);
+        guildMemberEventService.createMemberEvent(member.getGuild(), member, GuildMemberEventType.LEAVE);
         guildMemberService.deleteGuildMember(guildId, memberId);
-        guildMemberEventService.createMemberLeaveEvent(guildId, memberId);
     }
 
     /**

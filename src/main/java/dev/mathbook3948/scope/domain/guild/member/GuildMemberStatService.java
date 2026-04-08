@@ -20,6 +20,11 @@ public class GuildMemberStatService {
     }
 
     @Transactional
+    public void deleteAllByGuildId(Long guildId) {
+        guildMemberStatRepository.deleteAllByGuild_GuildId(guildId);
+    }
+
+    @Transactional
     public void createGuildMemberStat(Guild guild, int joinedMembers, int leftMembers, int totalMembers) {
         guildMemberStatRepository.save(GuildMemberStat.of(guild, joinedMembers, leftMembers, totalMembers));
     }

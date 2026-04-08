@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dev.mathbook3948.scope.domain.guild.Guild;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -15,16 +16,16 @@ public class GuildMemberEventService {
     private final GuildMemberEventRepository guildMemberEventRepository;
 
     public int countByGuildIdAndEventTypeAfter(Long guildId, GuildMemberEventType eventType, Instant after) {
-        return guildMemberEventRepository.countByGuildIdAndEventTypeAndCreatedAtAfter(guildId, eventType, after);
+        return guildMemberEventRepository.countByGuild_GuildIdAndEventTypeAndCreatedAtAfter(guildId, eventType, after);
     }
 
     @Transactional
-    public void createMemberJoinEvent(Long guildId, Long memberId) {
-        guildMemberEventRepository.save(GuildMemberEvent.of(guildId, memberId, GuildMemberEventType.JOIN));
+    public void deleteAllByGuildId(Long guildId) {
+        guildMemberEventRepository.deleteAllByGuild_GuildId(guildId);
     }
 
     @Transactional
-    public void createMemberLeaveEvent(Long guildId, Long memberId) {
-        guildMemberEventRepository.save(GuildMemberEvent.of(guildId, memberId, GuildMemberEventType.LEAVE));
+    public void createMemberEvent(Guild guild, GuildMember member, GuildMemberEventType eventType) {
+        guildMemberEventRepository.save(GuildMemberEvent.of(guild, member, eventType));
     }
 }

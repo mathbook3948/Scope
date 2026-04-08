@@ -13,6 +13,11 @@ public class GuildMemberService {
     private final GuildMemberRepository guildMemberRepository;
     private final GuildRepository guildRepository;
 
+    public GuildMember findByGuildIdAndMemberId(Long guildId, Long memberId) {
+        return guildMemberRepository.findByGuild_GuildIdAndMemberId(guildId, memberId)
+            .orElseThrow(() -> new IllegalArgumentException("GuildMember not found: guildId=" + guildId + ", memberId=" + memberId));
+    }
+
     @Transactional
     public void upsertGuildMember(Long guildId, Long memberId, String name, String avatarUrl) {
         guildMemberRepository.findByGuild_GuildIdAndMemberId(guildId, memberId)
@@ -31,5 +36,10 @@ public class GuildMemberService {
 
     public int countByGuildId(Long guildId) {
         return guildMemberRepository.countByGuild_GuildId(guildId);
+    }
+
+    @Transactional
+    public void deleteAllByGuildId(Long guildId) {
+        guildMemberRepository.deleteAllByGuild_GuildId(guildId);
     }
 }

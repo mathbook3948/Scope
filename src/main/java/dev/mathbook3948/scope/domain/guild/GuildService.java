@@ -23,6 +23,11 @@ public class GuildService {
     }
 
     @Transactional
+    public void deleteGuild(Long guildId) {
+        guildRepository.deleteById(guildId);
+    }
+
+    @Transactional
     public void updateGuild(Long guildId, String name) {
         guildRepository.findById(guildId)
             .ifPresent(guild -> guild.updateName(name));
