@@ -5,6 +5,7 @@ import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import dev.mathbook3948.scope.domain.guild.Guild;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,8 +25,9 @@ public class GuildMemberStat {
     @Column(name = "guild_member_stat_seq")
     private Long guildMemberStatSeq;
 
-    @Column(name = "guild_id", nullable = false)
-    private Long guildId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "guild_id", nullable = false)
+    private Guild guild;
 
     @Column(name = "joined_members", nullable = false)
     private Integer joinedMembers;
@@ -40,9 +42,9 @@ public class GuildMemberStat {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    public static GuildMemberStat of(Long guildId, Integer joinedMembers, Integer leftMembers, Integer totalMembers) {
+    public static GuildMemberStat of(Guild guild, Integer joinedMembers, Integer leftMembers, Integer totalMembers) {
         GuildMemberStat stat = new GuildMemberStat();
-        stat.guildId = guildId;
+        stat.guild = guild;
         stat.joinedMembers = joinedMembers;
         stat.leftMembers = leftMembers;
         stat.totalMembers = totalMembers;

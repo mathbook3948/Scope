@@ -60,7 +60,7 @@ public class GuildMemberFacade {
             int left = guildMemberEventService.countByGuildIdAndEventTypeAfter(guildId, GuildMemberEventType.LEAVE, since);
             int total = guildMemberService.countByGuildId(guildId);
 
-            guildMemberStatService.createGuildMemberStat(guildId, joined, left, total);
+            guildMemberStatService.createGuildMemberStat(guild, joined, left, total);
         });
     }
 }
