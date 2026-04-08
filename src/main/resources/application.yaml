@@ -15,6 +15,12 @@ spring:
     hibernate:
       ddl-auto: update
 
+jobrunr:
+  database:
+    table-prefix: t_scp_
+  background-job-server:
+    enabled: true
+
 scope:
   discord:
     token:
