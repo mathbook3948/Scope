@@ -1,0 +1,16 @@
+# 파일로 설정할 경우 (config/application.yaml)
+scope:
+  discord:
+    token: YOUR_BOT_TOKEN_HERE
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/scope
+    username: scope
+    password: YOUR_DB_PASSWORD_HERE
+
+# 환경변수로 설정할 경우 (.env)
+# SCOPE_DISCORD_TOKEN=YOUR_BOT_TOKEN_HERE
+# SCOPE_DB_URL=jdbc:postgresql://localhost:5432/scope
+# SCOPE_DB_USER=scope
+# SCOPE_DB_PASSWORD=YOUR_DB_PASSWORD_HERE

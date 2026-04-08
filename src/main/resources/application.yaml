@@ -1,0 +1,20 @@
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p ${PID} --- [%t] %-40.40logger{39} : %m%n"
+
+spring:
+  application:
+    name: scope
+  config:
+    import: optional:file:./config/application.yaml
+  datasource:
+    url: ${SCOPE_DB_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${SCOPE_DB_USER:postgres}
+    password: ${SCOPE_DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+scope:
+  discord:
+    token:

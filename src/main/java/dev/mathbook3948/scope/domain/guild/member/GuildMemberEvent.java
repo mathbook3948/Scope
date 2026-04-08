@@ -1,0 +1,48 @@
+package dev.mathbook3948.scope.domain.guild.member;
+
+
+import java.time.Instant;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "t_scp_guild_member_event", indexes = {
+    @Index(name = "idx_guild_member_event_created_at", columnList = "created_at"),
+    @Index(name = "idx_guild_member_event_guild_id", columnList = "guild_id")
+})
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class GuildMemberEvent {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "guild_member_event_seq")
+    private Long guildMemberEventSeq;
+
+    @Column(name = "guild_id", nullable = false)
+    private Long guildId;
+
+    @Column(name = "member_id", nullable = false)
+    private Long memberId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "event_type", nullable = false)
+    private GuildMemberEventType eventType;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    public static GuildMemberEvent of(Long guildId, Long memberId, GuildMemberEventType eventType) {
+        GuildMemberEvent event = new GuildMemberEvent();
+        event.guildId = guildId;
+        event.memberId = memberId;
+        event.eventType = eventType;
+        return event;
+    }
+}
