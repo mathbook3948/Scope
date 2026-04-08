@@ -39,4 +39,13 @@ public class GuildMemberStat {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
+
+    public static GuildMemberStat of(Long guildId, Integer joinedMembers, Integer leftMembers, Integer totalMembers) {
+        GuildMemberStat stat = new GuildMemberStat();
+        stat.guildId = guildId;
+        stat.joinedMembers = joinedMembers;
+        stat.leftMembers = leftMembers;
+        stat.totalMembers = totalMembers;
+        return stat;
+    }
 }
