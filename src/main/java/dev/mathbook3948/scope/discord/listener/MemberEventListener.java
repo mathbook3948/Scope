@@ -1,6 +1,6 @@
 package dev.mathbook3948.scope.discord.listener;
 
-import dev.mathbook3948.scope.facade.GuildFacade;
+import dev.mathbook3948.scope.facade.GuildMemberFacade;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MemberEventListener extends ListenerAdapter {
 
-    private final GuildFacade guildFacade;
+    private final GuildMemberFacade guildMemberFacade;
 
     @Override
     public void onReady(ReadyEvent event) {
         event.getJDA().getGuilds().forEach(guild -> {
             guild.loadMembers(member -> {
                 if (!member.getUser().isBot()) {
-                    guildFacade.upsertMember(guild.getIdLong(), member.getIdLong(), member.getEffectiveName(), member.getEffectiveAvatarUrl());
+                    guildMemberFacade.upsertMember(guild.getIdLong(), member.getIdLong(), member.getEffectiveName(), member.getEffectiveAvatarUrl());
                 }
             });
         });
@@ -28,17 +28,17 @@ public class MemberEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-        guildFacade.onGuildMemberJoin(event.getGuild().getIdLong(), event.getUser().getIdLong(), event.getUser().getEffectiveName(), event.getUser().getEffectiveAvatarUrl());
+        guildMemberFacade.onGuildMemberJoin(event.getGuild().getIdLong(), event.getUser().getIdLong(), event.getUser().getEffectiveName(), event.getUser().getEffectiveAvatarUrl());
     }
 
     @Override
     public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
-        guildFacade.onGuildMemberRemove(event.getGuild().getIdLong(), event.getUser().getIdLong());
+        guildMemberFacade.onGuildMemberRemove(event.getGuild().getIdLong(), event.getUser().getIdLong());
     }
 
     @Override
     public void onGuildMemberUpdate(GuildMemberUpdateEvent event) {
-        guildFacade.upsertMember(event.getGuild().getIdLong(), event.getUser().getIdLong(), event.getMember().getEffectiveName(), event.getMember().getEffectiveAvatarUrl());
+        guildMemberFacade.upsertMember(event.getGuild().getIdLong(), event.getUser().getIdLong(), event.getMember().getEffectiveName(), event.getMember().getEffectiveAvatarUrl());
     }
 
 }
