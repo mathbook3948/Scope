@@ -1,5 +1,8 @@
 package dev.mathbook3948.scope.domain.guild.member;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import dev.mathbook3948.scope.domain.guild.GuildRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,6 +39,14 @@ public class GuildMemberService {
 
     public int countByGuildId(Long guildId) {
         return guildMemberRepository.countByGuild_GuildId(guildId);
+    }
+
+    public Map<Long, Long> countPerGuild() {
+        Map<Long, Long> result = new HashMap<>();
+        for (Object[] row : guildMemberRepository.countPerGuild()) {
+            result.put((Long) row[0], (Long) row[1]);
+        }
+        return result;
     }
 
     @Transactional

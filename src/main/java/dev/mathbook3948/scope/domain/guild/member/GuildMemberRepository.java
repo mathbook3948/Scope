@@ -1,7 +1,9 @@
 package dev.mathbook3948.scope.domain.guild.member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface GuildMemberRepository extends JpaRepository<GuildMember, Long> {
@@ -11,6 +13,9 @@ public interface GuildMemberRepository extends JpaRepository<GuildMember, Long> 
     void deleteByGuild_GuildIdAndMemberId(Long guildId, Long memberId);
 
     int countByGuild_GuildId(Long guildId);
+
+    @Query("SELECT m.guild.guildId, COUNT(m) FROM GuildMember m GROUP BY m.guild.guildId")
+    List<Object[]> countPerGuild();
 
     void deleteAllByGuild_GuildId(Long guildId);
 }

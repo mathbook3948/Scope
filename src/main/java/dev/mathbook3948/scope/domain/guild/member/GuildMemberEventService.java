@@ -1,6 +1,7 @@
 package dev.mathbook3948.scope.domain.guild.member;
 
 import java.time.Instant;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,10 @@ public class GuildMemberEventService {
 
     public int countByGuildIdAndEventTypeAfter(Long guildId, GuildMemberEventType eventType, Instant after) {
         return guildMemberEventRepository.countByGuildIdAndEventTypeAndCreatedAtAfter(guildId, eventType, after);
+    }
+
+    public List<GuildMemberEvent> findAllAfter(Instant since) {
+        return guildMemberEventRepository.findAllAfter(since);
     }
 
     @Transactional

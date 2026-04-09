@@ -1,5 +1,8 @@
 package dev.mathbook3948.scope.domain.guild.member;
 
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -17,6 +20,14 @@ public class GuildMemberStatService {
 
     public Optional<GuildMemberStat> findLatestByGuildId(Long guildId) {
         return guildMemberStatRepository.findTopByGuild_GuildIdOrderByCreatedAtDesc(guildId);
+    }
+
+    public Map<Long, Instant> findLatestCreatedAtPerGuild() {
+        Map<Long, Instant> result = new HashMap<>();
+        for (Object[] row : guildMemberStatRepository.findLatestCreatedAtPerGuild()) {
+            result.put((Long) row[0], (Instant) row[1]);
+        }
+        return result;
     }
 
     @Transactional

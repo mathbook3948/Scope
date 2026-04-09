@@ -3,6 +3,7 @@ package dev.mathbook3948.scope.facade;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dev.mathbook3948.scope.domain.guild.Guild;
 import dev.mathbook3948.scope.domain.guild.GuildService;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventService;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventType;
@@ -12,7 +13,9 @@ import dev.mathbook3948.scope.domain.guild.member.GuildMemberStatService;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -56,20 +59,36 @@ public class GuildMemberFacade {
      */
     @Transactional
     public void aggregateGuildMemberStats() {
-        guildService.findAll().forEach(guild -> {
+        List<Guild> guilds = guildService.findAll();
+
+        // 길드별 마지막 stat 시점
+        Map<Long, Instant> latestStatAt = guildMemberStatService.findLatestCreatedAtPerGuild();
+        Instant globalSince = latestStatAt.values().stream().min(Instant::compareTo).orElse(Instant.EPOCH);
+
+        // globalSince 이후 이벤트를 한 번에 조회 후, 길드별 since로 필터링하여 집계
+        Map<Long, Map<GuildMemberEventType, Integer>> eventCounts = new HashMap<>();
+        for (var event : guildMemberEventService.findAllAfter(globalSince)) {
+            Instant since = latestStatAt.getOrDefault(event.getGuildId(), Instant.EPOCH);
+            if (!event.getCreatedAt().isAfter(since)) continue;
+
+            eventCounts
+                .computeIfAbsent(event.getGuildId(), k -> new HashMap<>())
+                .merge(event.getEventType(), 1, Integer::sum);
+        }
+
+        // 길드별 현재 총 멤버 수
+        Map<Long, Long> totalMembers = guildMemberService.countPerGuild();
+
+        // 각 길드별로 stat insert
+        for (Guild guild : guilds) {
             Long guildId = guild.getGuildId();
 
-            // 마지막 stat 시점 조회
-            Instant since = guildMemberStatService.findLatestByGuildId(guildId)
-                .map(stat -> stat.getCreatedAt())
-                .orElse(Instant.EPOCH);
-
-            // 기준 시점 이후 가입/탈퇴 수 및 현재 총 멤버 수 집계
-            int joined = guildMemberEventService.countByGuildIdAndEventTypeAfter(guildId, GuildMemberEventType.JOIN, since);
-            int left = guildMemberEventService.countByGuildIdAndEventTypeAfter(guildId, GuildMemberEventType.LEAVE, since);
-            int total = guildMemberService.countByGuildId(guildId);
+            Map<GuildMemberEventType, Integer> counts = eventCounts.getOrDefault(guildId, Map.of());
+            int joined = counts.getOrDefault(GuildMemberEventType.JOIN, 0);
+            int left = counts.getOrDefault(GuildMemberEventType.LEAVE, 0);
+            int total = totalMembers.getOrDefault(guildId, 0L).intValue();
 
             guildMemberStatService.createGuildMemberStat(guild, joined, left, total);
-        });
+        }
     }
 }
