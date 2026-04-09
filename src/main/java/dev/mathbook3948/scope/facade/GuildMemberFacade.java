@@ -4,14 +4,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dev.mathbook3948.scope.domain.guild.GuildService;
-import dev.mathbook3948.scope.domain.guild.member.GuildMember;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventService;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventType;
+import dev.mathbook3948.scope.domain.guild.member.GuildMemberInfo;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberService;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberStatService;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,16 +32,21 @@ public class GuildMemberFacade {
     }
 
     @Transactional
+    public void upsertMembers(Long guildId, List<GuildMemberInfo> members) {
+        members.forEach(member ->
+            guildMemberService.upsertGuildMember(guildId, member.memberId(), member.name(), member.avatarUrl())
+        );
+    }
+
+    @Transactional
     public void onGuildMemberJoin(Long guildId, Long memberId, String name, String avatarUrl) {
         guildMemberService.upsertGuildMember(guildId, memberId, name, avatarUrl);
-        GuildMember member = guildMemberService.findByGuildIdAndMemberId(guildId, memberId);
-        guildMemberEventService.createMemberEvent(member.getGuild(), member, GuildMemberEventType.JOIN);
+        guildMemberEventService.createMemberEvent(guildId, memberId, GuildMemberEventType.JOIN);
     }
 
     @Transactional
     public void onGuildMemberRemove(Long guildId, Long memberId) {
-        GuildMember member = guildMemberService.findByGuildIdAndMemberId(guildId, memberId);
-        guildMemberEventService.createMemberEvent(member.getGuild(), member, GuildMemberEventType.LEAVE);
+        guildMemberEventService.createMemberEvent(guildId, memberId, GuildMemberEventType.LEAVE);
         guildMemberService.deleteGuildMember(guildId, memberId);
     }
 

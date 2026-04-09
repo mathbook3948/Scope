@@ -19,14 +19,14 @@ public class GuildMemberService {
     }
 
     @Transactional
-    public void upsertGuildMember(Long guildId, Long memberId, String name, String avatarUrl) {
-        guildMemberRepository.findByGuild_GuildIdAndMemberId(guildId, memberId)
-            .ifPresentOrElse(
-                member -> {
-                    member.updateName(name);
-                    member.updateAvatarUrl(avatarUrl);
-                },
-                () -> guildMemberRepository.save(GuildMember.of(guildRepository.getReferenceById(guildId), memberId, name, avatarUrl)));
+    public GuildMember upsertGuildMember(Long guildId, Long memberId, String name, String avatarUrl) {
+        return guildMemberRepository.findByGuild_GuildIdAndMemberId(guildId, memberId)
+            .map(member -> {
+                member.updateName(name);
+                member.updateAvatarUrl(avatarUrl);
+                return member;
+            })
+            .orElseGet(() -> guildMemberRepository.save(GuildMember.of(guildRepository.getReferenceById(guildId), memberId, name, avatarUrl)));
     }
 
     @Transactional

@@ -5,7 +5,6 @@ import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import dev.mathbook3948.scope.domain.guild.Guild;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,19 +24,11 @@ public class GuildMemberEvent {
     @Column(name = "guild_member_event_seq")
     private Long guildMemberEventSeq;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "guild_id", nullable = false)
-    private Guild guild;
+    @Column(name = "guild_id", nullable = false)
+    private Long guildId;
 
     @Column(name = "member_id", nullable = false)
     private Long memberId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-        @JoinColumn(name = "guild_id", referencedColumnName = "guild_id", nullable = false, insertable = false, updatable = false),
-        @JoinColumn(name = "member_id", referencedColumnName = "member_id", nullable = false, insertable = false, updatable = false)
-    })
-    private GuildMember member;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type", nullable = false)
@@ -47,11 +38,10 @@ public class GuildMemberEvent {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    public static GuildMemberEvent of(Guild guild, GuildMember member, GuildMemberEventType eventType) {
+    public static GuildMemberEvent of(Long guildId, Long memberId, GuildMemberEventType eventType) {
         GuildMemberEvent event = new GuildMemberEvent();
-        event.guild = guild;
-        event.member = member;
-        event.memberId = member.getMemberId();
+        event.guildId = guildId;
+        event.memberId = memberId;
         event.eventType = eventType;
         return event;
     }

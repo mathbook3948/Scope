@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GuildMemberEventRepository extends JpaRepository<GuildMemberEvent, Long> {
 
-    int countByGuild_GuildIdAndEventTypeAndCreatedAtAfter(Long guildId, GuildMemberEventType eventType, Instant after);
+    int countByGuildIdAndEventTypeAndCreatedAtAfter(Long guildId, GuildMemberEventType eventType, Instant after);
 
-    void deleteAllByGuild_GuildId(Long guildId);
+    void deleteAllByGuildId(Long guildId);
 }
