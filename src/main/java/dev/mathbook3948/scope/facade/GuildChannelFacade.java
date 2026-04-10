@@ -2,7 +2,6 @@ package dev.mathbook3948.scope.facade;
 
 import dev.mathbook3948.scope.domain.guild.channel.GuildChannelInfo;
 import dev.mathbook3948.scope.domain.guild.channel.GuildChannelService;
-import dev.mathbook3948.scope.domain.guild.channel.GuildChannelType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +16,8 @@ public class GuildChannelFacade {
     private final GuildChannelService guildChannelService;
 
     @Transactional
-    public void upsertChannel(Long guildId, Long channelId, String name, GuildChannelType channelType) {
-        guildChannelService.upsertGuildChannel(guildId, channelId, name, channelType);
+    public void upsertChannel(Long guildId, GuildChannelInfo channelInfo) {
+        guildChannelService.upsertGuildChannel(guildId, channelInfo);
     }
 
     @Transactional

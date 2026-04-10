@@ -21,15 +21,16 @@ public class GuildChannelService {
     private final GuildRepository guildRepository;
 
     @Transactional
-    public void upsertGuildChannel(Long guildId, Long channelId, String name, GuildChannelType channelType) {
-        guildChannelRepository.findByGuild_GuildIdAndChannelId(guildId, channelId)
+    public void upsertGuildChannel(Long guildId, GuildChannelInfo info) {
+        guildChannelRepository.findByGuild_GuildIdAndChannelId(guildId, info.channelId())
             .ifPresentOrElse(
                 channel -> {
-                    channel.updateName(name);
-                    channel.updateChannelType(channelType);
+                    channel.updateName(info.name());
+                    channel.updateChannelType(info.channelType());
+                    channel.updateParentChannelId(info.parentChannelId());
                 },
                 () -> guildChannelRepository.save(
-                    GuildChannel.of(guildRepository.getReferenceById(guildId), channelId, name, channelType)
+                    GuildChannel.of(guildRepository.getReferenceById(guildId), info.channelId(), info.name(), info.channelType(), info.parentChannelId())
                 )
             );
     }
@@ -55,8 +56,11 @@ public class GuildChannelService {
                 if (existing.getChannelType() != info.channelType()) {
                     existing.updateChannelType(info.channelType());
                 }
+                if (!java.util.Objects.equals(existing.getParentChannelId(), info.parentChannelId())) {
+                    existing.updateParentChannelId(info.parentChannelId());
+                }
             } else {
-                newChannels.add(GuildChannel.of(guildRef, info.channelId(), info.name(), info.channelType()));
+                newChannels.add(GuildChannel.of(guildRef, info.channelId(), info.name(), info.channelType(), info.parentChannelId()));
             }
         }
 
