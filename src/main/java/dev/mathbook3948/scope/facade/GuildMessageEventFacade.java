@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class GuildMessageEventFacade {
 
     private final GuildMessageEventService guildMessageEventService;
