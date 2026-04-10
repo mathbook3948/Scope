@@ -1,6 +1,9 @@
 package dev.mathbook3948.scope.discord.listener;
 
+import dev.mathbook3948.scope.domain.guild.channel.GuildChannelInfo;
+import dev.mathbook3948.scope.domain.guild.channel.GuildChannelType;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberInfo;
+import dev.mathbook3948.scope.facade.GuildChannelFacade;
 import dev.mathbook3948.scope.facade.GuildFacade;
 import dev.mathbook3948.scope.facade.GuildMemberFacade;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +24,18 @@ public class MemberEventListener extends ListenerAdapter {
 
     private final GuildFacade guildFacade;
     private final GuildMemberFacade guildMemberFacade;
+    private final GuildChannelFacade guildChannelFacade;
 
     @Override
     public void onReady(ReadyEvent event) {
         event.getJDA().getGuilds().forEach(guild -> {
             guildFacade.upsertGuild(guild.getIdLong(), guild.getName());
+
+            List<GuildChannelInfo> channelInfos = guild.getChannels().stream()
+                .map(ch -> new GuildChannelInfo(ch.getIdLong(), ch.getName(), GuildChannelType.from(ch.getType().name())))
+                .toList();
+            guildChannelFacade.upsertChannels(guild.getIdLong(), channelInfos);
+
             guild.loadMembers().onSuccess(members -> {
                 List<GuildMemberInfo> memberInfos = members.stream()
                     .filter(member -> !member.getUser().isBot())
@@ -50,5 +60,4 @@ public class MemberEventListener extends ListenerAdapter {
     public void onGuildMemberUpdate(GuildMemberUpdateEvent event) {
         guildMemberFacade.upsertMember(event.getGuild().getIdLong(), event.getMember().getIdLong(), event.getMember().getEffectiveName(), event.getMember().getEffectiveAvatarUrl());
     }
-
 }

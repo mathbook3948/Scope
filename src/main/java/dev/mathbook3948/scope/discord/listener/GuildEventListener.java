@@ -1,6 +1,9 @@
 package dev.mathbook3948.scope.discord.listener;
 
+import dev.mathbook3948.scope.domain.guild.channel.GuildChannelInfo;
+import dev.mathbook3948.scope.domain.guild.channel.GuildChannelType;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberInfo;
+import dev.mathbook3948.scope.facade.GuildChannelFacade;
 import dev.mathbook3948.scope.facade.GuildFacade;
 import dev.mathbook3948.scope.facade.GuildMemberFacade;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +22,17 @@ import java.util.List;
 public class GuildEventListener extends ListenerAdapter {
 
     private final GuildFacade guildFacade;
-
     private final GuildMemberFacade guildMemberFacade;
+    private final GuildChannelFacade guildChannelFacade;
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
         guildFacade.upsertGuild(event.getGuild().getIdLong(), event.getGuild().getName());
+
+        List<GuildChannelInfo> channelInfos = event.getGuild().getChannels().stream()
+            .map(ch -> new GuildChannelInfo(ch.getIdLong(), ch.getName(), GuildChannelType.from(ch.getType().name())))
+            .toList();
+        guildChannelFacade.upsertChannels(event.getGuild().getIdLong(), channelInfos);
 
         event.getGuild().loadMembers().onSuccess(members -> {
             List<GuildMemberInfo> guildMemberInfos = members.stream()
