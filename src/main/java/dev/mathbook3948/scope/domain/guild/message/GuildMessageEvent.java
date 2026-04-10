@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MessageEvent {
+public class GuildMessageEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "message_event_seq_gen")
@@ -42,7 +42,7 @@ public class MessageEvent {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type", nullable = false)
-    private MessageEventType eventType;
+    private GuildMessageEventType eventType;
 
     @Column(name = "content_length")
     private Integer contentLength;
@@ -51,9 +51,9 @@ public class MessageEvent {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    public static MessageEvent of(Long guildId, Long channelId, Long memberId, Long messageId,
-                                   MessageEventType eventType, Integer contentLength) {
-        MessageEvent event = new MessageEvent();
+    public static GuildMessageEvent of(Long guildId, Long channelId, Long memberId, Long messageId,
+                                   GuildMessageEventType eventType, Integer contentLength) {
+        GuildMessageEvent event = new GuildMessageEvent();
         event.guildId = guildId;
         event.channelId = channelId;
         event.memberId = memberId;
@@ -63,12 +63,12 @@ public class MessageEvent {
         return event;
     }
 
-    public static MessageEvent ofDelete(Long guildId, Long channelId, Long messageId) {
-        MessageEvent event = new MessageEvent();
+    public static GuildMessageEvent ofDelete(Long guildId, Long channelId, Long messageId) {
+        GuildMessageEvent event = new GuildMessageEvent();
         event.guildId = guildId;
         event.channelId = channelId;
         event.messageId = messageId;
-        event.eventType = MessageEventType.DELETE;
+        event.eventType = GuildMessageEventType.DELETE;
         return event;
     }
 }

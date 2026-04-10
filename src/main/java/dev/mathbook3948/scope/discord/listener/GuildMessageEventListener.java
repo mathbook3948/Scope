@@ -1,6 +1,6 @@
 package dev.mathbook3948.scope.discord.listener;
 
-import dev.mathbook3948.scope.facade.MessageEventFacade;
+import dev.mathbook3948.scope.facade.GuildMessageEventFacade;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -10,16 +10,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class MessageEventListener extends ListenerAdapter {
+public class GuildMessageEventListener extends ListenerAdapter {
 
-    private final MessageEventFacade messageEventFacade;
+    private final GuildMessageEventFacade guildMessageEventFacade;
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.isFromGuild()) return;
         if (event.getAuthor().isBot()) return;
 
-        messageEventFacade.onMessageSend(
+        guildMessageEventFacade.onMessageSend(
             event.getGuild().getIdLong(),
             event.getChannel().getIdLong(),
             event.getAuthor().getIdLong(),
@@ -32,7 +32,7 @@ public class MessageEventListener extends ListenerAdapter {
     public void onMessageDelete(MessageDeleteEvent event) {
         if (!event.isFromGuild()) return;
 
-        messageEventFacade.onMessageDelete(
+        guildMessageEventFacade.onMessageDelete(
             event.getGuild().getIdLong(),
             event.getChannel().getIdLong(),
             event.getMessageIdLong()
@@ -44,7 +44,7 @@ public class MessageEventListener extends ListenerAdapter {
         if (!event.isFromGuild()) return;
         if (event.getAuthor().isBot()) return;
 
-        messageEventFacade.onMessageUpdate(
+        guildMessageEventFacade.onMessageUpdate(
             event.getGuild().getIdLong(),
             event.getChannel().getIdLong(),
             event.getAuthor().getIdLong(),

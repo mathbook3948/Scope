@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface MessageEventRepository extends JpaRepository<MessageEvent, Long> {
+public interface GuildMessageEventRepository extends JpaRepository<GuildMessageEvent, Long> {
 
-    int countByGuildIdAndEventTypeAndCreatedAtAfter(Long guildId, MessageEventType eventType, Instant after);
+    int countByGuildIdAndEventTypeAndCreatedAtAfter(Long guildId, GuildMessageEventType eventType, Instant after);
 
     @Modifying
-    @Query("DELETE FROM MessageEvent e WHERE e.guildId = :guildId")
+    @Query("DELETE FROM GuildMessageEvent e WHERE e.guildId = :guildId")
     void deleteAllByGuildId(@Param("guildId") Long guildId);
 }
