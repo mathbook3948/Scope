@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,17 @@ public class GuildEventListener extends ListenerAdapter {
     private final GuildFacade guildFacade;
     private final GuildMemberFacade guildMemberFacade;
     private final GuildChannelFacade guildChannelFacade;
+
+    @Override
+    public void onReady(ReadyEvent event) {
+
+        //guild만 upsert
+        List<GuildInfo> guildInfos = event.getJDA().getGuilds().stream()
+            .map(guild -> new GuildInfo(guild.getIdLong(), guild.getName()))
+            .toList();
+
+        guildFacade.upsertGuilds(guildInfos);
+    }
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
