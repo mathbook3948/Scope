@@ -27,6 +27,15 @@ public class GuildService {
     }
 
     @Transactional
+    public void upsertGuild(Long guildId, String name) {
+        guildRepository.findById(guildId)
+            .ifPresentOrElse(
+                guild -> guild.updateName(name),
+                () -> guildRepository.save(Guild.of(guildId, name))
+            );
+    }
+
+    @Transactional
     public void deleteGuild(Long guildId) {
         guildRepository.deleteById(guildId);
     }

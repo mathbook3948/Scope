@@ -19,6 +19,11 @@ public class GuildFacade {
     private final GuildMemberStatService guildMemberStatService;
 
     @Transactional
+    public void upsertGuild(Long guildId, String name) {
+        guildService.upsertGuild(guildId, name);
+    }
+
+    @Transactional
     public void onGuildJoin(Long guildId, String name) {
         guildService.createGuild(guildId, name);
     }

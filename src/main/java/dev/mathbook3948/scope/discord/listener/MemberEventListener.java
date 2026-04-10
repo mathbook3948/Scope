@@ -1,6 +1,7 @@
 package dev.mathbook3948.scope.discord.listener;
 
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberInfo;
+import dev.mathbook3948.scope.facade.GuildFacade;
 import dev.mathbook3948.scope.facade.GuildMemberFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +19,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberEventListener extends ListenerAdapter {
 
+    private final GuildFacade guildFacade;
     private final GuildMemberFacade guildMemberFacade;
 
     @Override
     public void onReady(ReadyEvent event) {
         event.getJDA().getGuilds().forEach(guild -> {
+            guildFacade.upsertGuild(guild.getIdLong(), guild.getName());
             guild.loadMembers().onSuccess(members -> {
                 List<GuildMemberInfo> memberInfos = members.stream()
                     .filter(member -> !member.getUser().isBot())
