@@ -24,11 +24,6 @@ public class GuildFacade {
     }
 
     @Transactional
-    public void onGuildJoin(Long guildId, String name) {
-        guildService.createGuild(guildId, name);
-    }
-
-    @Transactional
     public void onGuildUpdateName(Long guildId, String name) {
         guildService.updateGuild(guildId, name);
     }

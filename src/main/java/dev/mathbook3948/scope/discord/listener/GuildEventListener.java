@@ -24,7 +24,7 @@ public class GuildEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        guildFacade.onGuildJoin(event.getGuild().getIdLong(), event.getGuild().getName());
+        guildFacade.upsertGuild(event.getGuild().getIdLong(), event.getGuild().getName());
 
         event.getGuild().loadMembers().onSuccess(members -> {
             List<GuildMemberInfo> guildMemberInfos = members.stream()
