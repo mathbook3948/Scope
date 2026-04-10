@@ -1,5 +1,6 @@
 package dev.mathbook3948.scope.discord.listener;
 
+import dev.mathbook3948.scope.facade.MessageEventFacade;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -11,20 +12,44 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MessageEventListener extends ListenerAdapter {
 
+    private final MessageEventFacade messageEventFacade;
+
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+        if (!event.isFromGuild()) return;
         if (event.getAuthor().isBot()) return;
-        // TODO: facade에 위임 — 메시지 활동 수집, 참여도 스코어 갱신
+
+        messageEventFacade.onMessageSend(
+            event.getGuild().getIdLong(),
+            event.getChannel().getIdLong(),
+            event.getAuthor().getIdLong(),
+            event.getMessageIdLong(),
+            event.getMessage().getContentRaw().length()
+        );
     }
 
     @Override
     public void onMessageDelete(MessageDeleteEvent event) {
-        // TODO: facade에 위임 — 삭제 메시지 기록
+        if (!event.isFromGuild()) return;
+
+        messageEventFacade.onMessageDelete(
+            event.getGuild().getIdLong(),
+            event.getChannel().getIdLong(),
+            event.getMessageIdLong()
+        );
     }
 
     @Override
     public void onMessageUpdate(MessageUpdateEvent event) {
+        if (!event.isFromGuild()) return;
         if (event.getAuthor().isBot()) return;
-        // TODO: facade에 위임 — 수정 메시지 기록
+
+        messageEventFacade.onMessageUpdate(
+            event.getGuild().getIdLong(),
+            event.getChannel().getIdLong(),
+            event.getAuthor().getIdLong(),
+            event.getMessageIdLong(),
+            event.getMessage().getContentRaw().length()
+        );
     }
 }
