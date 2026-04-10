@@ -1,7 +1,3 @@
-logging:
-  pattern:
-    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p ${PID} --- [%t] %-40.40logger{39} : %m%n"
-
 spring:
   application:
     name: Scope
@@ -25,6 +21,20 @@ jobrunr:
     table-prefix: t_scp_
   background-job-server:
     enabled: true
+
+logging:
+  level:
+    root: INFO
+  file:
+    name: # logs/app.log
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
+      total-size-cap: 1GB
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p --- [%t] %-40.40logger{39} : %m%n"
+    file: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p --- [%t] %-40.40logger{39} : %m%n"
 
 scope:
   discord:
