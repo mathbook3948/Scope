@@ -69,8 +69,12 @@ public class GuildMemberService {
         for (GuildMemberInfo info : members) {
             GuildMember existing = existingMap.get(info.memberId());
             if (existing != null) {
-                existing.updateName(info.name());
-                existing.updateAvatarUrl(info.avatarUrl());
+                if (!existing.getName().equals(info.name())) {
+                    existing.updateName(info.name());
+                }
+                if (!existing.getAvatarUrl().equals(info.avatarUrl())) {
+                    existing.updateAvatarUrl(info.avatarUrl());
+                }
             } else {
                 newMembers.add(GuildMember.of(guildRef, info.memberId(), info.name(), info.avatarUrl()));
             }

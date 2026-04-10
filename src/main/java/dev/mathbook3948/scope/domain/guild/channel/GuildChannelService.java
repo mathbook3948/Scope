@@ -49,8 +49,12 @@ public class GuildChannelService {
         for (GuildChannelInfo info : channels) {
             GuildChannel existing = existingMap.get(info.channelId());
             if (existing != null) {
-                existing.updateName(info.name());
-                existing.updateChannelType(info.channelType());
+                if (!existing.getName().equals(info.name())) {
+                    existing.updateName(info.name());
+                }
+                if (existing.getChannelType() != info.channelType()) {
+                    existing.updateChannelType(info.channelType());
+                }
             } else {
                 newChannels.add(GuildChannel.of(guildRef, info.channelId(), info.name(), info.channelType()));
             }
