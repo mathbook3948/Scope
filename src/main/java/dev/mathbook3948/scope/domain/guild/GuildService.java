@@ -31,9 +31,16 @@ public class GuildService {
         guildRepository.deleteById(guildId);
     }
 
+    /**
+     * Guild 명을 업데이트한다
+     * @param guildId Guild ID
+     * @param name Guild 명
+     * 
+     * @throws IllegalStateException Guild ID에 해당하는 Guild가 존재하지 않을경우
+     */
     @Transactional
     public void updateGuild(Long guildId, String name) {
-        guildRepository.findById(guildId)
-            .ifPresent(guild -> guild.updateName(name));
+        Guild guild = guildRepository.findById(guildId).orElseThrow(() -> new IllegalStateException("Guild not found: " + guildId));
+        guild.updateName(name);
     }
 }
