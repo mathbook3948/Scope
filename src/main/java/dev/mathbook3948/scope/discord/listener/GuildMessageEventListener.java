@@ -24,7 +24,7 @@ public class GuildMessageEventListener extends ListenerAdapter {
             event.getChannel().getIdLong(),
             event.getAuthor().getIdLong(),
             event.getMessageIdLong(),
-            event.getMessage().getContentRaw().length()
+            event.getMessage().getContentRaw().codePointCount(0, event.getMessage().getContentRaw().length())
         );
     }
 
@@ -49,7 +49,7 @@ public class GuildMessageEventListener extends ListenerAdapter {
             event.getChannel().getIdLong(),
             event.getAuthor().getIdLong(),
             event.getMessageIdLong(),
-            event.getMessage().getContentRaw().length()
+            event.getMessage().getContentRaw().codePointCount(0, event.getMessage().getContentRaw().length())
         );
     }
 }
