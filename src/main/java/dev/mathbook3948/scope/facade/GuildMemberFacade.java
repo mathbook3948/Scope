@@ -57,6 +57,7 @@ public class GuildMemberFacade {
     @Transactional
     public void aggregateGuildMemberStats() {
         List<Long> guildIds = guildService.findAllGuildIds();
+        if (guildIds.isEmpty()) return;
 
         // 길드별 마지막 stat 시점
         Map<Long, Instant> latestStatAt = guildMemberStatService.findLatestCreatedAtPerGuild();
