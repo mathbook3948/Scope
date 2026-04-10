@@ -1,8 +1,13 @@
 package dev.mathbook3948.scope.domain.guild.member;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import dev.mathbook3948.scope.domain.guild.Guild;
 import dev.mathbook3948.scope.domain.guild.GuildRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,6 +52,33 @@ public class GuildMemberService {
             result.put((Long) row[0], (Long) row[1]);
         }
         return result;
+    }
+
+    @Transactional
+    public void upsertGuildMembers(Long guildId, List<GuildMemberInfo> members) {
+        List<Long> memberIds = members.stream().map(GuildMemberInfo::memberId).toList();
+
+        Map<Long, GuildMember> existingMap = guildMemberRepository
+            .findByGuild_GuildIdAndMemberIdIn(guildId, memberIds)
+            .stream()
+            .collect(Collectors.toMap(GuildMember::getMemberId, Function.identity()));
+
+        Guild guildRef = guildRepository.getReferenceById(guildId);
+        List<GuildMember> newMembers = new ArrayList<>();
+
+        for (GuildMemberInfo info : members) {
+            GuildMember existing = existingMap.get(info.memberId());
+            if (existing != null) {
+                existing.updateName(info.name());
+                existing.updateAvatarUrl(info.avatarUrl());
+            } else {
+                newMembers.add(GuildMember.of(guildRef, info.memberId(), info.name(), info.avatarUrl()));
+            }
+        }
+
+        if (!newMembers.isEmpty()) {
+            guildMemberRepository.saveAll(newMembers);
+        }
     }
 
     @Transactional

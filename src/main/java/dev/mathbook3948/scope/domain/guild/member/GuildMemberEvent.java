@@ -20,7 +20,8 @@ import lombok.NoArgsConstructor;
 public class GuildMemberEvent {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "guild_member_event_seq_gen")
+    @SequenceGenerator(name = "guild_member_event_seq_gen", sequenceName = "t_scp_guild_member_event_seq", allocationSize = 50)
     @Column(name = "guild_member_event_seq")
     private Long guildMemberEventSeq;
 

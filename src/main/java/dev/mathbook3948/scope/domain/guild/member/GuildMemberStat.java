@@ -21,7 +21,8 @@ import lombok.NoArgsConstructor;
 public class GuildMemberStat {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "guild_member_stat_seq_gen")
+    @SequenceGenerator(name = "guild_member_stat_seq_gen", sequenceName = "t_scp_guild_member_stat_seq", allocationSize = 50)
     @Column(name = "guild_member_stat_seq")
     private Long guildMemberStatSeq;
 

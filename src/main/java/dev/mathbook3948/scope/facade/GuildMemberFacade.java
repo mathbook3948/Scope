@@ -36,9 +36,7 @@ public class GuildMemberFacade {
 
     @Transactional
     public void upsertMembers(Long guildId, List<GuildMemberInfo> members) {
-        members.forEach(member ->
-            guildMemberService.upsertGuildMember(guildId, member.memberId(), member.name(), member.avatarUrl())
-        );
+        guildMemberService.upsertGuildMembers(guildId, members);
     }
 
     @Transactional
