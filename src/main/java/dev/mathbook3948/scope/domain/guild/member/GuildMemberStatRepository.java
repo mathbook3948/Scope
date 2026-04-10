@@ -9,12 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface GuildMemberStatRepository extends JpaRepository<GuildMemberStat, Long> {
 
-    Optional<GuildMemberStat> findTopByGuild_GuildIdOrderByCreatedAtDesc(Long guildId);
+    Optional<GuildMemberStat> findTopByGuildIdOrderByCreatedAtDesc(Long guildId);
 
-    @Query("SELECT s.guild.guildId, MAX(s.createdAt) FROM GuildMemberStat s GROUP BY s.guild.guildId")
+    @Query("SELECT s.guildId, MAX(s.createdAt) FROM GuildMemberStat s GROUP BY s.guildId")
     List<Object[]> findLatestCreatedAtPerGuild();
 
     @Modifying
-    @Query("DELETE FROM GuildMemberStat s WHERE s.guild.guildId = :guildId")
-    void deleteAllByGuild_GuildId(Long guildId);
+    @Query("DELETE FROM GuildMemberStat s WHERE s.guildId = :guildId")
+    void deleteAllByGuildId(Long guildId);
 }

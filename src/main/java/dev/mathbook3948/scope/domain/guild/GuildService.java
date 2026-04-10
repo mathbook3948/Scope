@@ -17,8 +17,8 @@ public class GuildService {
 
     private final GuildRepository guildRepository;
 
-    public List<Guild> findAll() {
-        return guildRepository.findAll();
+    public List<Long> findAllGuildIds() {
+        return guildRepository.findAllGuildIds();
     }
 
     public Guild getReferenceById(Long guildId) {

@@ -3,7 +3,6 @@ package dev.mathbook3948.scope.facade;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import dev.mathbook3948.scope.domain.guild.Guild;
 import dev.mathbook3948.scope.domain.guild.GuildService;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventService;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventType;
@@ -57,7 +56,7 @@ public class GuildMemberFacade {
      */
     @Transactional
     public void aggregateGuildMemberStats() {
-        List<Guild> guilds = guildService.findAll();
+        List<Long> guildIds = guildService.findAllGuildIds();
 
         // 길드별 마지막 stat 시점
         Map<Long, Instant> latestStatAt = guildMemberStatService.findLatestCreatedAtPerGuild();
@@ -78,15 +77,13 @@ public class GuildMemberFacade {
         Map<Long, Long> totalMembers = guildMemberService.countPerGuild();
 
         // 각 길드별로 stat insert
-        for (Guild guild : guilds) {
-            Long guildId = guild.getGuildId();
-
+        for (Long guildId : guildIds) {
             Map<GuildMemberEventType, Integer> counts = eventCounts.getOrDefault(guildId, Map.of());
             int joined = counts.getOrDefault(GuildMemberEventType.JOIN, 0);
             int left = counts.getOrDefault(GuildMemberEventType.LEAVE, 0);
             int total = totalMembers.getOrDefault(guildId, 0L).intValue();
 
-            guildMemberStatService.createGuildMemberStat(guild, joined, left, total);
+            guildMemberStatService.createGuildMemberStat(guildId, joined, left, total);
         }
     }
 }
