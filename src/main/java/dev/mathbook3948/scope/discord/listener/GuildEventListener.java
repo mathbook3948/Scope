@@ -1,10 +1,9 @@
 package dev.mathbook3948.scope.discord.listener;
 
 import dev.mathbook3948.scope.domain.guild.GuildInfo;
+import dev.mathbook3948.scope.discord.utils.JdaMapper;
 import dev.mathbook3948.scope.domain.guild.channel.GuildChannelInfo;
-import dev.mathbook3948.scope.domain.guild.channel.GuildChannelType;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberInfo;
-import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
 import dev.mathbook3948.scope.facade.GuildChannelFacade;
 import dev.mathbook3948.scope.facade.GuildFacade;
 import dev.mathbook3948.scope.facade.GuildMemberFacade;
@@ -44,13 +43,7 @@ public class GuildEventListener extends ListenerAdapter {
         guildFacade.upsertGuild(new GuildInfo(event.getGuild().getIdLong(), event.getGuild().getName()));
 
         List<GuildChannelInfo> channelInfos = event.getGuild().getChannels().stream()
-            .map(ch -> {
-                Long parentId = null;
-                if (ch instanceof ICategorizableChannel categorizable && categorizable.getParentCategory() != null) {
-                    parentId = categorizable.getParentCategory().getIdLong();
-                }
-                return new GuildChannelInfo(ch.getIdLong(), ch.getName(), GuildChannelType.from(ch.getType().name()), parentId);
-            })
+            .map(JdaMapper::toChannelInfo)
             .toList();
         guildChannelFacade.upsertChannels(event.getGuild().getIdLong(), channelInfos);
 

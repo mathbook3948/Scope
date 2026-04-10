@@ -4,5 +4,6 @@ public record GuildChannelInfo(
     Long channelId,
     String name,
     GuildChannelType channelType,
-    Long parentChannelId
+    Long parentChannelId,
+    Integer position
 ) {}

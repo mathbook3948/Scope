@@ -42,6 +42,9 @@ public class GuildChannel {
     @Column(name = "parent_channel_id")
     private Long parentChannelId;
 
+    @Column(name = "position")
+    private Integer position;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -50,13 +53,14 @@ public class GuildChannel {
     @Column(name = "updated_at", nullable = false, updatable = true)
     private Instant updatedAt;
 
-    public static GuildChannel of(Guild guild, Long channelId, String name, GuildChannelType channelType, Long parentChannelId) {
+    public static GuildChannel of(Guild guild, Long channelId, String name, GuildChannelType channelType, Long parentChannelId, Integer position) {
         GuildChannel guildChannel = new GuildChannel();
         guildChannel.guild = guild;
         guildChannel.channelId = channelId;
         guildChannel.name = name;
         guildChannel.channelType = channelType;
         guildChannel.parentChannelId = parentChannelId;
+        guildChannel.position = position;
         return guildChannel;
     }
 
@@ -70,5 +74,9 @@ public class GuildChannel {
 
     public void updateParentChannelId(Long parentChannelId) {
         this.parentChannelId = parentChannelId;
+    }
+
+    public void updatePosition(Integer position) {
+        this.position = position;
     }
 }

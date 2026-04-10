@@ -28,9 +28,10 @@ public class GuildChannelService {
                     channel.updateName(info.name());
                     channel.updateChannelType(info.channelType());
                     channel.updateParentChannelId(info.parentChannelId());
+                    channel.updatePosition(info.position());
                 },
                 () -> guildChannelRepository.save(
-                    GuildChannel.of(guildRepository.getReferenceById(guildId), info.channelId(), info.name(), info.channelType(), info.parentChannelId())
+                    GuildChannel.of(guildRepository.getReferenceById(guildId), info.channelId(), info.name(), info.channelType(), info.parentChannelId(), info.position())
                 )
             );
     }
@@ -59,8 +60,11 @@ public class GuildChannelService {
                 if (!java.util.Objects.equals(existing.getParentChannelId(), info.parentChannelId())) {
                     existing.updateParentChannelId(info.parentChannelId());
                 }
+                if (!java.util.Objects.equals(existing.getPosition(), info.position())) {
+                    existing.updatePosition(info.position());
+                }
             } else {
-                newChannels.add(GuildChannel.of(guildRef, info.channelId(), info.name(), info.channelType(), info.parentChannelId()));
+                newChannels.add(GuildChannel.of(guildRef, info.channelId(), info.name(), info.channelType(), info.parentChannelId(), info.position()));
             }
         }
 
