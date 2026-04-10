@@ -61,7 +61,10 @@ public class GuildMemberFacade {
 
         // 길드별 마지막 stat 시점
         Map<Long, Instant> latestStatAt = guildMemberStatService.findLatestCreatedAtPerGuild();
-        Instant globalSince = latestStatAt.values().stream().min(Instant::compareTo).orElse(Instant.EPOCH);
+        Instant globalSince = guildIds.stream()
+            .map(id -> latestStatAt.getOrDefault(id, Instant.EPOCH))
+            .min(Instant::compareTo)
+            .orElse(Instant.EPOCH);
 
         // globalSince 이후 이벤트를 한 번에 조회 후, 길드별 since로 필터링하여 집계
         Map<Long, Map<GuildMemberEventType, Integer>> eventCounts = new HashMap<>();
