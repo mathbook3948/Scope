@@ -38,7 +38,7 @@ public class MemberEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-        guildMemberFacade.onGuildMemberJoin(event.getGuild().getIdLong(), event.getUser().getIdLong(), event.getUser().getEffectiveName(), event.getUser().getEffectiveAvatarUrl());
+        guildMemberFacade.onGuildMemberJoin(event.getGuild().getIdLong(), event.getMember().getIdLong(), event.getMember().getEffectiveName(), event.getMember().getEffectiveAvatarUrl());
     }
 
     @Override
@@ -48,7 +48,7 @@ public class MemberEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberUpdate(GuildMemberUpdateEvent event) {
-        guildMemberFacade.upsertMember(event.getGuild().getIdLong(), event.getUser().getIdLong(), event.getMember().getEffectiveName(), event.getMember().getEffectiveAvatarUrl());
+        guildMemberFacade.upsertMember(event.getGuild().getIdLong(), event.getMember().getIdLong(), event.getMember().getEffectiveName(), event.getMember().getEffectiveAvatarUrl());
     }
 
 }
