@@ -10,6 +10,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 로그성 테이블. FK 사용 안함
+ */
 @Entity
 @Table(name = "t_scp_guild_member_event", indexes = {
     @Index(name = "idx_guild_member_event_created_at", columnList = "created_at"),
