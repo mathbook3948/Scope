@@ -1,6 +1,10 @@
 package dev.mathbook3948.scope.domain.guild;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,12 +31,38 @@ public class GuildService {
     }
 
     @Transactional
-    public void upsertGuild(Long guildId, String name) {
-        guildRepository.findById(guildId)
+    public void upsertGuild(GuildInfo guild) {
+        guildRepository.findById(guild.guildId())
             .ifPresentOrElse(
-                guild -> guild.updateName(name),
-                () -> guildRepository.save(Guild.of(guildId, name))
+                g -> g.updateName(guild.name()),
+                () -> guildRepository.save(Guild.of(guild.guildId(), guild.name()))
             );
+    }
+
+    @Transactional
+    public void upsertGuilds(List<GuildInfo> guilds) {
+        List<Long> guildIds = guilds.stream().map(GuildInfo::guildId).toList();
+
+        Map<Long, Guild> existingMap = guildRepository.findAllById(guildIds)
+            .stream()
+            .collect(Collectors.toMap(Guild::getGuildId, Function.identity()));
+
+        List<Guild> newGuilds = new ArrayList<>();
+
+        for (GuildInfo info : guilds) {
+            Guild existing = existingMap.get(info.guildId());
+            if (existing != null) {
+                if (!existing.getName().equals(info.name())) {
+                    existing.updateName(info.name());
+                }
+            } else {
+                newGuilds.add(Guild.of(info.guildId(), info.name()));
+            }
+        }
+
+        if (!newGuilds.isEmpty()) {
+            guildRepository.saveAll(newGuilds);
+        }
     }
 
     @Transactional

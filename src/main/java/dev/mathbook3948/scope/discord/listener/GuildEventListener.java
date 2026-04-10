@@ -1,5 +1,6 @@
 package dev.mathbook3948.scope.discord.listener;
 
+import dev.mathbook3948.scope.domain.guild.GuildInfo;
 import dev.mathbook3948.scope.domain.guild.channel.GuildChannelInfo;
 import dev.mathbook3948.scope.domain.guild.channel.GuildChannelType;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberInfo;
@@ -27,7 +28,7 @@ public class GuildEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        guildFacade.upsertGuild(event.getGuild().getIdLong(), event.getGuild().getName());
+        guildFacade.upsertGuild(new GuildInfo(event.getGuild().getIdLong(), event.getGuild().getName()));
 
         List<GuildChannelInfo> channelInfos = event.getGuild().getChannels().stream()
             .map(ch -> new GuildChannelInfo(ch.getIdLong(), ch.getName(), GuildChannelType.from(ch.getType().name())))

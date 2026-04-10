@@ -1,5 +1,6 @@
 package dev.mathbook3948.scope.facade;
 
+import dev.mathbook3948.scope.domain.guild.GuildInfo;
 import dev.mathbook3948.scope.domain.guild.GuildService;
 import dev.mathbook3948.scope.domain.guild.channel.GuildChannelService;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventService;
@@ -7,6 +8,9 @@ import dev.mathbook3948.scope.domain.guild.member.GuildMemberService;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberStatService;
 import dev.mathbook3948.scope.domain.guild.message.GuildMessageEventService;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +27,13 @@ public class GuildFacade {
     private final GuildMessageEventService guildMessageEventService;
 
     @Transactional
-    public void upsertGuild(Long guildId, String name) {
-        guildService.upsertGuild(guildId, name);
+    public void upsertGuild(GuildInfo guild) {
+        guildService.upsertGuild(guild);
+    }
+
+    @Transactional
+    public void upsertGuilds(List<GuildInfo> guilds) {
+        guildService.upsertGuilds(guilds);
     }
 
     @Transactional
