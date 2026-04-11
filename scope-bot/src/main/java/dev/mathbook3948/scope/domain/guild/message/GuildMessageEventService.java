@@ -33,4 +33,9 @@ public class GuildMessageEventService {
     public void deleteAllByGuildId(Long guildId) {
         guildMessageEventRepository.deleteAllByGuildId(guildId);
     }
+
+    @Transactional
+    public void deleteAllBefore(Instant before) {
+        guildMessageEventRepository.deleteAllByCreatedAtBefore(before);
+    }
 }

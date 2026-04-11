@@ -12,8 +12,10 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public record JobProperties(
         @Valid GuildMemberStatJob guildMemberStat,
-        @Valid GuildMemberEventCleanupJob guildMemberEventCleanup
+        @Valid GuildMemberEventCleanupJob guildMemberEventCleanup,
+        @Valid GuildMessageEventCleanupJob guildMessageEventCleanup
 ) {
     public record GuildMemberStatJob(@NotBlank String cron) {}
     public record GuildMemberEventCleanupJob(@NotBlank String cron, @NotNull Duration retention) {}
+    public record GuildMessageEventCleanupJob(@NotBlank String cron, @NotNull Duration retention) {}
 }

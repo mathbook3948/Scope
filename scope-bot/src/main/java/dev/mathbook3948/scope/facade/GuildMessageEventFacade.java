@@ -1,5 +1,7 @@
 package dev.mathbook3948.scope.facade;
 
+import java.time.Instant;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,5 +29,15 @@ public class GuildMessageEventFacade {
     @Transactional
     public void onMessageDelete(Long guildId, Long channelId, Long messageId) {
         guildMessageEventService.createDeleteEvent(guildId, channelId, messageId);
+    }
+
+    /**
+     * 보관 기간이 지난 GuildMessageEvent를 일괄 삭제한다.
+     *
+     * @see dev.mathbook3948.scope.job.GuildMessageEventCleanupJob
+     */
+    @Transactional
+    public void cleanupGuildMessageEvents(Instant before) {
+        guildMessageEventService.deleteAllBefore(before);
     }
 }
