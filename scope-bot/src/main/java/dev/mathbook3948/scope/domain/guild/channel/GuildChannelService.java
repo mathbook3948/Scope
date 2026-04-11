@@ -45,8 +45,7 @@ public class GuildChannelService {
             .stream()
             .collect(Collectors.toMap(GuildChannel::getChannelId, Function.identity()));
 
-        Guild guildRef = guildRepository.getReferenceById(guildId);
-        List<GuildChannel> newChannels = new ArrayList<>();
+        List<GuildChannelInfo> newChannelInfos = new ArrayList<>();
 
         for (GuildChannelInfo info : channels) {
             GuildChannel existing = existingMap.get(info.channelId());
@@ -64,11 +63,15 @@ public class GuildChannelService {
                     existing.updatePosition(info.position());
                 }
             } else {
-                newChannels.add(GuildChannel.of(guildRef, info.channelId(), info.name(), info.channelType(), info.parentChannelId(), info.position()));
+                newChannelInfos.add(info);
             }
         }
 
-        if (!newChannels.isEmpty()) {
+        if (!newChannelInfos.isEmpty()) {
+            Guild guildRef = guildRepository.getReferenceById(guildId);
+            List<GuildChannel> newChannels = newChannelInfos.stream()
+                .map(info -> GuildChannel.of(guildRef, info.channelId(), info.name(), info.channelType(), info.parentChannelId(), info.position()))
+                .toList();
             guildChannelRepository.saveAll(newChannels);
         }
     }

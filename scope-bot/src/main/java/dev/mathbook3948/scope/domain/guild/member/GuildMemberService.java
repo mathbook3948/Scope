@@ -63,8 +63,7 @@ public class GuildMemberService {
             .stream()
             .collect(Collectors.toMap(GuildMember::getMemberId, Function.identity()));
 
-        Guild guildRef = guildRepository.getReferenceById(guildId);
-        List<GuildMember> newMembers = new ArrayList<>();
+        List<GuildMemberInfo> newMemberInfos = new ArrayList<>();
 
         for (GuildMemberInfo info : members) {
             GuildMember existing = existingMap.get(info.memberId());
@@ -76,11 +75,15 @@ public class GuildMemberService {
                     existing.updateAvatarUrl(info.avatarUrl());
                 }
             } else {
-                newMembers.add(GuildMember.of(guildRef, info.memberId(), info.name(), info.avatarUrl()));
+                newMemberInfos.add(info);
             }
         }
 
-        if (!newMembers.isEmpty()) {
+        if (!newMemberInfos.isEmpty()) {
+            Guild guildRef = guildRepository.getReferenceById(guildId);
+            List<GuildMember> newMembers = newMemberInfos.stream()
+                .map(info -> GuildMember.of(guildRef, info.memberId(), info.name(), info.avatarUrl()))
+                .toList();
             guildMemberRepository.saveAll(newMembers);
         }
     }
