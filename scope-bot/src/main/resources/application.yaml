@@ -40,5 +40,9 @@ scope:
   discord:
     token:
   job:
-    guild-member-stat: "0 * * * *"
+    guild-member-stat:
+      cron: "0 * * * *"
+    guild-member-event-cleanup:
+      cron: "0 0 1 * *"
+      retention: 30d
 

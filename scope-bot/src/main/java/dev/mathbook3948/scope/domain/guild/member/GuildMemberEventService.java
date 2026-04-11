@@ -29,6 +29,11 @@ public class GuildMemberEventService {
     }
 
     @Transactional
+    public void deleteAllBefore(Instant before) {
+        guildMemberEventRepository.deleteAllByCreatedAtBefore(before);
+    }
+
+    @Transactional
     public void createMemberEvent(Long guildId, Long memberId, GuildMemberEventType eventType) {
         guildMemberEventRepository.save(GuildMemberEvent.of(guildId, memberId, eventType));
     }

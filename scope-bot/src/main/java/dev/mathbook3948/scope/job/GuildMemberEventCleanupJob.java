@@ -1,5 +1,7 @@
 package dev.mathbook3948.scope.job;
 
+import java.time.Instant;
+
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -11,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class GuildMemberStatJob {
+public class GuildMemberEventCleanupJob {
 
     private final JobScheduler jobScheduler;
 
@@ -21,10 +23,11 @@ public class GuildMemberStatJob {
 
     @EventListener(ApplicationReadyEvent.class)
     public void register() {
-        jobScheduler.scheduleRecurrently("GuildMemberStatJob", jobProperties.guildMemberStat().cron(), this::execute);
+        jobScheduler.scheduleRecurrently("GuildMemberEventCleanupJob", jobProperties.guildMemberEventCleanup().cron(), this::execute);
     }
 
     public void execute() {
-        guildMemberFacade.aggregateGuildMemberStats();
+        Instant cutoff = Instant.now().minus(jobProperties.guildMemberEventCleanup().retention());
+        guildMemberFacade.cleanupGuildMemberEvents(cutoff);
     }
 }
