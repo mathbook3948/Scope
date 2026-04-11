@@ -2,11 +2,13 @@ package dev.mathbook3948.scope.discord.utils;
 
 import dev.mathbook3948.scope.domain.guild.channel.GuildChannelInfo;
 import dev.mathbook3948.scope.domain.guild.channel.GuildChannelType;
+import dev.mathbook3948.scope.domain.guild.reaction.GuildReactionEventInfo;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
 import net.dv8tion.jda.api.entities.channel.attribute.IPositionableChannel;
+import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
 
 /**
  * JDA 타입을 도메인 타입으로 변환하는 유틸 클래스
@@ -38,6 +40,16 @@ public class JdaMapper {
             GuildChannelType.from(channel.getType().name()),
             parentId,
             position
+        );
+    }
+
+    public static GuildReactionEventInfo toReactionEventInfo(GenericMessageReactionEvent event) {
+        return new GuildReactionEventInfo(
+            event.getGuild().getIdLong(),
+            event.getChannel().getIdLong(),
+            event.getMessageIdLong(),
+            event.getUserIdLong(),
+            event.getReaction().getEmoji().getAsReactionCode()
         );
     }
 }

@@ -1,5 +1,7 @@
 package dev.mathbook3948.scope.discord.listener;
 
+import dev.mathbook3948.scope.discord.utils.JdaMapper;
+import dev.mathbook3948.scope.facade.GuildReactionEventFacade;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
@@ -10,15 +12,21 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ReactionEventListener extends ListenerAdapter {
 
+    private final GuildReactionEventFacade guildReactionEventFacade;
+
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
+        if (!event.isFromGuild()) return;
         if (event.getUser() != null && event.getUser().isBot()) return;
-        // TODO: facade에 위임 — 리액션 추가 기록 (수신자 참여도 +2점)
+
+        guildReactionEventFacade.onReactionAdd(JdaMapper.toReactionEventInfo(event));
     }
 
     @Override
     public void onMessageReactionRemove(MessageReactionRemoveEvent event) {
+        if (!event.isFromGuild()) return;
         if (event.getUser() != null && event.getUser().isBot()) return;
-        // TODO: facade에 위임 — 리액션 취소 기록
+
+        guildReactionEventFacade.onReactionRemove(JdaMapper.toReactionEventInfo(event));
     }
 }

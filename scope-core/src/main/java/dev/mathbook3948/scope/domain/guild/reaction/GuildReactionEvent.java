@@ -1,0 +1,63 @@
+package dev.mathbook3948.scope.domain.guild.reaction;
+
+import java.time.Instant;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+/**
+ * 로그성 테이블. FK 사용 안함
+ */
+@Entity
+@Table(name = "t_scp_guild_reaction_event", indexes = {
+    @Index(name = "idx_reaction_event_created_at", columnList = "created_at"),
+    @Index(name = "idx_reaction_event_guild_id", columnList = "guild_id")
+})
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class GuildReactionEvent {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reaction_event_seq_gen")
+    @SequenceGenerator(name = "reaction_event_seq_gen", sequenceName = "t_scp_guild_reaction_event_seq", allocationSize = 50)
+    @Column(name = "reaction_event_seq")
+    private Long reactionEventSeq;
+
+    @Column(name = "guild_id", nullable = false)
+    private Long guildId;
+
+    @Column(name = "channel_id", nullable = false)
+    private Long channelId;
+
+    @Column(name = "message_id", nullable = false)
+    private Long messageId;
+
+    @Column(name = "member_id", nullable = false)
+    private Long memberId;
+
+    @Column(name = "emoji", nullable = false)
+    private String emoji;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "event_type", nullable = false)
+    private GuildReactionEventType eventType;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    public static GuildReactionEvent of(GuildReactionEventInfo reaction, GuildReactionEventType eventType) {
+        GuildReactionEvent event = new GuildReactionEvent();
+        event.guildId = reaction.guildId();
+        event.channelId = reaction.channelId();
+        event.messageId = reaction.messageId();
+        event.memberId = reaction.memberId();
+        event.emoji = reaction.emoji();
+        event.eventType = eventType;
+        return event;
+    }
+}
