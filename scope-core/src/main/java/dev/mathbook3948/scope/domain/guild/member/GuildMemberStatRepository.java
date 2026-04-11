@@ -18,7 +18,7 @@ public interface GuildMemberStatRepository extends JpaRepository<GuildMemberStat
 
     @Modifying
     @Query("DELETE FROM GuildMemberStat s WHERE s.guildId = :guildId")
-    void deleteAllByGuildId(Long guildId);
+    void deleteAllByGuildId(@Param("guildId") Long guildId);
 
     @Modifying
     @Query("DELETE FROM GuildMemberStat s WHERE s.createdAt < :before")

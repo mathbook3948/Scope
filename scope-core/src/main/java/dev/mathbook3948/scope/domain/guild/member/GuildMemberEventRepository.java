@@ -17,7 +17,7 @@ public interface GuildMemberEventRepository extends JpaRepository<GuildMemberEve
 
     @Modifying
     @Query("DELETE FROM GuildMemberEvent e WHERE e.guildId = :guildId")
-    void deleteAllByGuildId(Long guildId);
+    void deleteAllByGuildId(@Param("guildId") Long guildId);
 
     @Modifying
     @Query("DELETE FROM GuildMemberEvent e WHERE e.createdAt < :before")
