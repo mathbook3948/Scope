@@ -37,11 +37,6 @@ public class GuildFacade {
     }
 
     @Transactional
-    public void onGuildUpdateName(Long guildId, String name) {
-        guildService.updateGuild(guildId, name);
-    }
-
-    @Transactional
     public void onGuildLeave(Long guildId) {
         guildMemberStatService.deleteAllByGuildId(guildId);
         guildMemberEventService.deleteAllByGuildId(guildId);

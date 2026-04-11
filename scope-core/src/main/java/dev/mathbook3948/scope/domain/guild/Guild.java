@@ -33,6 +33,9 @@ public class Guild implements Persistable<Long>{
     @Column(nullable = false, columnDefinition = "text")
     private String name;
 
+    @Column(name = "icon_url", columnDefinition = "text")
+    private String iconUrl;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -51,14 +54,19 @@ public class Guild implements Persistable<Long>{
     @PostLoad
     void markNotNew() { this.isNew = false; }
 
-    public static Guild of(Long guildId, String name) {
+    public static Guild of(Long guildId, String name, String iconUrl) {
         Guild guild = new Guild();
         guild.guildId = guildId;
         guild.name = name;
+        guild.iconUrl = iconUrl;
         return guild;
     }
 
     public void updateName(String name) {
         this.name = name;
+    }
+
+    public void updateIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 }

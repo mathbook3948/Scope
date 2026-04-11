@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateIconEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -32,7 +33,7 @@ public class GuildEventListener extends ListenerAdapter {
 
         //guild만 upsert
         List<GuildInfo> guildInfos = event.getJDA().getGuilds().stream()
-            .map(guild -> new GuildInfo(guild.getIdLong(), guild.getName()))
+            .map(guild -> new GuildInfo(guild.getIdLong(), guild.getName(), guild.getIconUrl()))
             .toList();
 
         guildFacade.upsertGuilds(guildInfos);
@@ -40,7 +41,7 @@ public class GuildEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        guildFacade.upsertGuild(new GuildInfo(event.getGuild().getIdLong(), event.getGuild().getName()));
+        guildFacade.upsertGuild(new GuildInfo(event.getGuild().getIdLong(), event.getGuild().getName(), event.getGuild().getIconUrl()));
 
         List<GuildChannelInfo> channelInfos = event.getGuild().getChannels().stream()
             .map(JdaMapper::toChannelInfo)
@@ -58,7 +59,12 @@ public class GuildEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildUpdateName(GuildUpdateNameEvent event) {
-        guildFacade.onGuildUpdateName(event.getGuild().getIdLong(), event.getGuild().getName());
+        guildFacade.upsertGuild(new GuildInfo(event.getGuild().getIdLong(), event.getGuild().getName(), event.getGuild().getIconUrl()));
+    }
+
+    @Override
+    public void onGuildUpdateIcon(GuildUpdateIconEvent event) {
+        guildFacade.upsertGuild(new GuildInfo(event.getGuild().getIdLong(), event.getGuild().getName(), event.getGuild().getIconUrl()));
     }
 
     @Override

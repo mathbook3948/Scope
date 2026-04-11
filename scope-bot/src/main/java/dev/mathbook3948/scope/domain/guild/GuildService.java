@@ -3,6 +3,7 @@ package dev.mathbook3948.scope.domain.guild;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -26,16 +27,19 @@ public class GuildService {
     }
 
     @Transactional
-    public void createGuild(Long guildId, String name) {
-        guildRepository.save(Guild.of(guildId, name));
+    public void createGuild(Long guildId, String name, String iconUrl) {
+        guildRepository.save(Guild.of(guildId, name, iconUrl));
     }
 
     @Transactional
     public void upsertGuild(GuildInfo guild) {
         guildRepository.findById(guild.guildId())
             .ifPresentOrElse(
-                g -> g.updateName(guild.name()),
-                () -> guildRepository.save(Guild.of(guild.guildId(), guild.name()))
+                g -> {
+                    g.updateName(guild.name());
+                    g.updateIconUrl(guild.iconUrl());
+                },
+                () -> guildRepository.save(Guild.of(guild.guildId(), guild.name(), guild.iconUrl()))
             );
     }
 
@@ -55,8 +59,11 @@ public class GuildService {
                 if (!existing.getName().equals(info.name())) {
                     existing.updateName(info.name());
                 }
+                if (!Objects.equals(existing.getIconUrl(), info.iconUrl())) {
+                    existing.updateIconUrl(info.iconUrl());
+                }
             } else {
-                newGuilds.add(Guild.of(info.guildId(), info.name()));
+                newGuilds.add(Guild.of(info.guildId(), info.name(), info.iconUrl()));
             }
         }
 
@@ -68,18 +75,5 @@ public class GuildService {
     @Transactional
     public void deleteGuild(Long guildId) {
         guildRepository.deleteById(guildId);
-    }
-
-    /**
-     * Guild 명을 업데이트한다
-     * @param guildId Guild ID
-     * @param name Guild 명
-     * 
-     * @throws IllegalStateException Guild ID에 해당하는 Guild가 존재하지 않을경우
-     */
-    @Transactional
-    public void updateGuild(Long guildId, String name) {
-        Guild guild = guildRepository.findById(guildId).orElseThrow(() -> new IllegalStateException("Guild not found: " + guildId));
-        guild.updateName(name);
     }
 }

@@ -32,7 +32,7 @@ class GuildMemberServiceTest {
     void upsertGuildMembers_mixedExistingAndNew_updatesExistingAndSavesNew() {
         // given
         Long guildId = 1L;
-        Guild guildRef = Guild.of(guildId, "TestGuild");
+        Guild guildRef = Guild.of(guildId, "TestGuild", null);
         GuildMember existing = GuildMember.of(guildRef, 101L, "OldName", "old.png");
 
         when(guildMemberRepository.findByGuild_GuildIdAndMemberIdIn(guildId, List.of(101L, 102L)))
@@ -66,7 +66,7 @@ class GuildMemberServiceTest {
     void upsertGuildMembers_allExistingSameValues_noSave() {
         // given
         Long guildId = 1L;
-        Guild guildRef = Guild.of(guildId, "TestGuild");
+        Guild guildRef = Guild.of(guildId, "TestGuild", null);
         GuildMember existing = GuildMember.of(guildRef, 101L, "Name", "avatar.png");
 
         when(guildMemberRepository.findByGuild_GuildIdAndMemberIdIn(guildId, List.of(101L)))
@@ -84,7 +84,7 @@ class GuildMemberServiceTest {
     void upsertGuildMembers_allNew_savesAll() {
         // given
         Long guildId = 1L;
-        Guild guildRef = Guild.of(guildId, "TestGuild");
+        Guild guildRef = Guild.of(guildId, "TestGuild", null);
 
         when(guildMemberRepository.findByGuild_GuildIdAndMemberIdIn(guildId, List.of(101L, 102L)))
             .thenReturn(List.of());

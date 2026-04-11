@@ -32,7 +32,7 @@ class GuildChannelServiceTest {
     void upsertGuildChannels_mixedExistingAndNew_updatesExistingAndSavesNew() {
         // given
         Long guildId = 1L;
-        Guild guildRef = Guild.of(guildId, "TestGuild");
+        Guild guildRef = Guild.of(guildId, "TestGuild", null);
         GuildChannel existing = GuildChannel.of(guildRef, 100L, "OldName", GuildChannelType.TEXT, null, 0);
 
         when(guildChannelRepository.findByGuild_GuildIdAndChannelIdIn(guildId, List.of(100L, 200L)))
@@ -67,7 +67,7 @@ class GuildChannelServiceTest {
     void upsertGuildChannels_partialFieldChange_updatesOnlyChangedFields() {
         // given
         Long guildId = 1L;
-        Guild guildRef = Guild.of(guildId, "TestGuild");
+        Guild guildRef = Guild.of(guildId, "TestGuild", null);
         GuildChannel existing = GuildChannel.of(guildRef, 100L, "General", GuildChannelType.TEXT, 50L, 3);
 
         when(guildChannelRepository.findByGuild_GuildIdAndChannelIdIn(guildId, List.of(100L)))
@@ -94,7 +94,7 @@ class GuildChannelServiceTest {
     void upsertGuildChannels_allExistingSameValues_noSave() {
         // given
         Long guildId = 1L;
-        Guild guildRef = Guild.of(guildId, "TestGuild");
+        Guild guildRef = Guild.of(guildId, "TestGuild", null);
         GuildChannel existing = GuildChannel.of(guildRef, 100L, "General", GuildChannelType.TEXT, 50L, 3);
 
         when(guildChannelRepository.findByGuild_GuildIdAndChannelIdIn(guildId, List.of(100L)))
@@ -114,7 +114,7 @@ class GuildChannelServiceTest {
     void upsertGuildChannels_allNew_savesAll() {
         // given
         Long guildId = 1L;
-        Guild guildRef = Guild.of(guildId, "TestGuild");
+        Guild guildRef = Guild.of(guildId, "TestGuild", null);
 
         when(guildChannelRepository.findByGuild_GuildIdAndChannelIdIn(guildId, List.of(100L, 200L)))
             .thenReturn(List.of());

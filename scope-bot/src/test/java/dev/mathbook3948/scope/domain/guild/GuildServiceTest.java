@@ -26,12 +26,12 @@ class GuildServiceTest {
     @DisplayName("기존 길드는 이름을 업데이트하고 신규 길드는 저장한다")
     void upsertGuilds_mixedExistingAndNew_updatesExistingAndSavesNew() {
         // given
-        Guild existing = Guild.of(1L, "OldName");
+        Guild existing = Guild.of(1L, "OldName", "old-icon.png");
         when(guildRepository.findAllById(List.of(1L, 2L))).thenReturn(List.of(existing));
 
         List<GuildInfo> guilds = List.of(
-            new GuildInfo(1L, "NewName"),
-            new GuildInfo(2L, "BrandNew")
+            new GuildInfo(1L, "NewName", "new-icon.png"),
+            new GuildInfo(2L, "BrandNew", "brand-icon.png")
         );
 
         // when
@@ -39,6 +39,7 @@ class GuildServiceTest {
 
         // then
         assertThat(existing.getName()).isEqualTo("NewName");
+        assertThat(existing.getIconUrl()).isEqualTo("new-icon.png");
 
         @SuppressWarnings("unchecked")
         ArgumentCaptor<List<Guild>> captor = ArgumentCaptor.forClass(List.class);
@@ -51,14 +52,14 @@ class GuildServiceTest {
     }
 
     @Test
-    @DisplayName("모두 기존 길드이고 이름이 같으면 저장하지 않는다")
+    @DisplayName("모두 기존 길드이고 모든 항목이 같으면 저장하지 않는다")
     void upsertGuilds_allExistingSameName_noSave() {
         // given
-        Guild existing = Guild.of(1L, "SameName");
+        Guild existing = Guild.of(1L, "SameName", "same-icon.png");
         when(guildRepository.findAllById(List.of(1L))).thenReturn(List.of(existing));
 
         // when
-        guildService.upsertGuilds(List.of(new GuildInfo(1L, "SameName")));
+        guildService.upsertGuilds(List.of(new GuildInfo(1L, "SameName", "same-icon.png")));
 
         // then
         verify(guildRepository, never()).saveAll(any());
@@ -71,8 +72,8 @@ class GuildServiceTest {
         when(guildRepository.findAllById(List.of(1L, 2L))).thenReturn(List.of());
 
         List<GuildInfo> guilds = List.of(
-            new GuildInfo(1L, "Guild1"),
-            new GuildInfo(2L, "Guild2")
+            new GuildInfo(1L, "Guild1", "icon1.png"),
+            new GuildInfo(2L, "Guild2", "icon2.png")
         );
 
         // when
