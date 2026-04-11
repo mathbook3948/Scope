@@ -1,5 +1,7 @@
 package dev.mathbook3948.scope.discord.listener;
 
+import dev.mathbook3948.scope.domain.guild.voice.GuildVoiceEventInfo;
+import dev.mathbook3948.scope.facade.GuildVoiceEventFacade;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -9,14 +11,22 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class VoiceEventListener extends ListenerAdapter {
 
+    private final GuildVoiceEventFacade guildVoiceEventFacade;
+
     @Override
     public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event) {
+        Long guildId = event.getGuild().getIdLong();
+        Long memberId = event.getMember().getIdLong();
+
         if (event.getChannelJoined() != null && event.getChannelLeft() == null) {
-            // TODO: facade에 위임 — 음성 입장 기록
+            GuildVoiceEventInfo info = new GuildVoiceEventInfo(guildId, event.getChannelJoined().getIdLong(), memberId);
+            guildVoiceEventFacade.onVoiceJoin(info);
         } else if (event.getChannelLeft() != null && event.getChannelJoined() == null) {
-            // TODO: facade에 위임 — 음성 퇴장 기록, 체류 시간 계산
+            GuildVoiceEventInfo info = new GuildVoiceEventInfo(guildId, event.getChannelLeft().getIdLong(), memberId);
+            guildVoiceEventFacade.onVoiceLeave(info);
         } else {
-            // TODO: facade에 위임 — 채널 이동 기록
+            GuildVoiceEventInfo info = new GuildVoiceEventInfo(guildId, event.getChannelJoined().getIdLong(), memberId);
+            guildVoiceEventFacade.onVoiceMove(info);
         }
     }
 }

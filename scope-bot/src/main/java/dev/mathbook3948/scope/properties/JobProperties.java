@@ -15,11 +15,13 @@ public record JobProperties(
         @Valid GuildMemberEventCleanupJob guildMemberEventCleanup,
         @Valid GuildMemberStatCleanupJob guildMemberStatCleanup,
         @Valid GuildMessageEventCleanupJob guildMessageEventCleanup,
-        @Valid GuildReactionEventCleanupJob guildReactionEventCleanup
+        @Valid GuildReactionEventCleanupJob guildReactionEventCleanup,
+        @Valid GuildVoiceEventCleanupJob guildVoiceEventCleanup
 ) {
     public record GuildMemberStatJob(@NotBlank String cron) {}
     public record GuildMemberEventCleanupJob(@NotBlank String cron, @NotNull Duration retention) {}
     public record GuildMemberStatCleanupJob(@NotBlank String cron, @NotNull Duration retention) {}
     public record GuildMessageEventCleanupJob(@NotBlank String cron, @NotNull Duration retention) {}
     public record GuildReactionEventCleanupJob(@NotBlank String cron, @NotNull Duration retention) {}
+    public record GuildVoiceEventCleanupJob(@NotBlank String cron, @NotNull Duration retention) {}
 }
