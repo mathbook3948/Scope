@@ -1,38 +1,43 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.13'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
-group = 'dev.mathbook3948'
-version = '0.0.1-SNAPSHOT'
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'io.spring.dependency-management'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+	group = 'dev.mathbook3948'
+	version = '0.0.1-SNAPSHOT'
+
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(21)
+		}
 	}
-}
 
-repositories {
-	mavenCentral()
-}
+	repositories {
+		mavenCentral()
+	}
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'net.dv8tion:JDA:6.4.1'
-	implementation 'org.jobrunr:jobrunr-spring-boot-3-starter:8.5.2'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.postgresql:postgresql'
-	annotationProcessor 'org.projectlombok:lombok'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testCompileOnly 'org.projectlombok:lombok'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	testAnnotationProcessor 'org.projectlombok:lombok'
-}
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.13"
+		}
+	}
 
-tasks.named('test') {
-	useJUnitPlatform()
+	dependencies {
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
+		testCompileOnly 'org.projectlombok:lombok'
+		testAnnotationProcessor 'org.projectlombok:lombok'
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		options.encoding = 'UTF-8'
+	}
+
+	tasks.named('test') {
+		useJUnitPlatform()
+	}
 }

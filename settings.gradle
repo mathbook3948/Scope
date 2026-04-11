@@ -1,1 +1,2 @@
 rootProject.name = 'scope'
+include 'scope-core', 'scope-bot'
