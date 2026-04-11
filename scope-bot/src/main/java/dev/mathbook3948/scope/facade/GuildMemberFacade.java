@@ -61,6 +61,16 @@ public class GuildMemberFacade {
     }
 
     /**
+     * 보관 기간이 지난 GuildMemberStat을 일괄 삭제한다.
+     *
+     * @see dev.mathbook3948.scope.job.GuildMemberStatCleanupJob
+     */
+    @Transactional
+    public void cleanupGuildMemberStats(Instant before) {
+        guildMemberStatService.deleteAllBefore(before);
+    }
+
+    /**
      * 모든 길드의 멤버 통계를 집계하여 스냅샷을 생성한다.
      * 마지막 스냅샷 이후 발생한 가입/탈퇴 이벤트를 집계하고, 현재 총 멤버 수와 함께 저장한다.
      */

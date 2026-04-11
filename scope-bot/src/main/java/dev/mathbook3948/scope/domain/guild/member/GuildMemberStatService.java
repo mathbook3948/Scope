@@ -35,6 +35,11 @@ public class GuildMemberStatService {
     }
 
     @Transactional
+    public void deleteAllBefore(Instant before) {
+        guildMemberStatRepository.deleteAllByCreatedAtBefore(before);
+    }
+
+    @Transactional
     public void createGuildMemberStat(Long guildId, int joinedMembers, int leftMembers, int totalMembers) {
         guildMemberStatRepository.save(GuildMemberStat.of(guildId, joinedMembers, leftMembers, totalMembers));
     }
