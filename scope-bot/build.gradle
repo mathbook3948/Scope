@@ -2,6 +2,10 @@ plugins {
 	id 'org.springframework.boot' version '3.5.13'
 }
 
+tasks.named('bootRun') {
+	workingDir = rootProject.projectDir
+}
+
 dependencies {
 	implementation project(':scope-core')
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
