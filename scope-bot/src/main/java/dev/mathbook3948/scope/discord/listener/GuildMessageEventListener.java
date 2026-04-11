@@ -1,5 +1,6 @@
 package dev.mathbook3948.scope.discord.listener;
 
+import dev.mathbook3948.scope.domain.guild.message.GuildMessageEventInfo;
 import dev.mathbook3948.scope.facade.GuildMessageEventFacade;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
@@ -18,36 +19,43 @@ public class GuildMessageEventListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.isFromGuild()) return;
 
-        guildMessageEventFacade.onMessageSend(
+        String content = event.getMessage().getContentRaw();
+        GuildMessageEventInfo info = new GuildMessageEventInfo(
             event.getGuild().getIdLong(),
             event.getChannel().getIdLong(),
             event.getAuthor().getIdLong(),
             event.getMessageIdLong(),
-            event.getMessage().getContentRaw().codePointCount(0, event.getMessage().getContentRaw().length())
+            content.codePointCount(0, content.length())
         );
+        guildMessageEventFacade.onMessageSend(info);
     }
 
     @Override
     public void onMessageDelete(MessageDeleteEvent event) {
         if (!event.isFromGuild()) return;
 
-        guildMessageEventFacade.onMessageDelete(
+        GuildMessageEventInfo info = new GuildMessageEventInfo(
             event.getGuild().getIdLong(),
             event.getChannel().getIdLong(),
-            event.getMessageIdLong()
+            null,
+            event.getMessageIdLong(),
+            null
         );
+        guildMessageEventFacade.onMessageDelete(info);
     }
 
     @Override
     public void onMessageUpdate(MessageUpdateEvent event) {
         if (!event.isFromGuild()) return;
 
-        guildMessageEventFacade.onMessageUpdate(
+        String content = event.getMessage().getContentRaw();
+        GuildMessageEventInfo info = new GuildMessageEventInfo(
             event.getGuild().getIdLong(),
             event.getChannel().getIdLong(),
             event.getAuthor().getIdLong(),
             event.getMessageIdLong(),
-            event.getMessage().getContentRaw().codePointCount(0, event.getMessage().getContentRaw().length())
+            content.codePointCount(0, content.length())
         );
+        guildMessageEventFacade.onMessageUpdate(info);
     }
 }

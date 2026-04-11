@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dev.mathbook3948.scope.domain.guild.message.GuildMessageEventInfo;
 import dev.mathbook3948.scope.domain.guild.message.GuildMessageEventService;
 import dev.mathbook3948.scope.domain.guild.message.GuildMessageEventType;
 import lombok.RequiredArgsConstructor;
@@ -17,18 +18,18 @@ public class GuildMessageEventFacade {
     private final GuildMessageEventService guildMessageEventService;
 
     @Transactional
-    public void onMessageSend(Long guildId, Long channelId, Long memberId, Long messageId, Integer contentLength) {
-        guildMessageEventService.createGuildMessageEvent(guildId, channelId, memberId, messageId, GuildMessageEventType.SEND, contentLength);
+    public void onMessageSend(GuildMessageEventInfo info) {
+        guildMessageEventService.createGuildMessageEvent(info, GuildMessageEventType.SEND);
     }
 
     @Transactional
-    public void onMessageUpdate(Long guildId, Long channelId, Long memberId, Long messageId, Integer contentLength) {
-        guildMessageEventService.createGuildMessageEvent(guildId, channelId, memberId, messageId, GuildMessageEventType.UPDATE, contentLength);
+    public void onMessageUpdate(GuildMessageEventInfo info) {
+        guildMessageEventService.createGuildMessageEvent(info, GuildMessageEventType.UPDATE);
     }
 
     @Transactional
-    public void onMessageDelete(Long guildId, Long channelId, Long messageId) {
-        guildMessageEventService.createDeleteEvent(guildId, channelId, messageId);
+    public void onMessageDelete(GuildMessageEventInfo info) {
+        guildMessageEventService.createDeleteEvent(info);
     }
 
     /**

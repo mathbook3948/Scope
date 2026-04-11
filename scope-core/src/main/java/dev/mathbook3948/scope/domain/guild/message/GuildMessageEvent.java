@@ -51,23 +51,22 @@ public class GuildMessageEvent {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    public static GuildMessageEvent of(Long guildId, Long channelId, Long memberId, Long messageId,
-                                   GuildMessageEventType eventType, Integer contentLength) {
+    public static GuildMessageEvent of(GuildMessageEventInfo info, GuildMessageEventType eventType) {
         GuildMessageEvent event = new GuildMessageEvent();
-        event.guildId = guildId;
-        event.channelId = channelId;
-        event.memberId = memberId;
-        event.messageId = messageId;
+        event.guildId = info.guildId();
+        event.channelId = info.channelId();
+        event.memberId = info.memberId();
+        event.messageId = info.messageId();
         event.eventType = eventType;
-        event.contentLength = contentLength;
+        event.contentLength = info.contentLength();
         return event;
     }
 
-    public static GuildMessageEvent ofDelete(Long guildId, Long channelId, Long messageId) {
+    public static GuildMessageEvent ofDelete(GuildMessageEventInfo info) {
         GuildMessageEvent event = new GuildMessageEvent();
-        event.guildId = guildId;
-        event.channelId = channelId;
-        event.messageId = messageId;
+        event.guildId = info.guildId();
+        event.channelId = info.channelId();
+        event.messageId = info.messageId();
         event.eventType = GuildMessageEventType.DELETE;
         return event;
     }

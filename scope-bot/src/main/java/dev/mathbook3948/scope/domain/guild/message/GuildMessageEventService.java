@@ -19,14 +19,13 @@ public class GuildMessageEventService {
     }
 
     @Transactional
-    public void createGuildMessageEvent(Long guildId, Long channelId, Long memberId, Long messageId,
-                                    GuildMessageEventType eventType, Integer contentLength) {
-        guildMessageEventRepository.save(GuildMessageEvent.of(guildId, channelId, memberId, messageId, eventType, contentLength));
+    public void createGuildMessageEvent(GuildMessageEventInfo info, GuildMessageEventType eventType) {
+        guildMessageEventRepository.save(GuildMessageEvent.of(info, eventType));
     }
 
     @Transactional
-    public void createDeleteEvent(Long guildId, Long channelId, Long messageId) {
-        guildMessageEventRepository.save(GuildMessageEvent.ofDelete(guildId, channelId, messageId));
+    public void createDeleteEvent(GuildMessageEventInfo info) {
+        guildMessageEventRepository.save(GuildMessageEvent.ofDelete(info));
     }
 
     @Transactional
