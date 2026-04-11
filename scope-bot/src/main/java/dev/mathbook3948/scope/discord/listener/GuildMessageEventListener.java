@@ -17,7 +17,6 @@ public class GuildMessageEventListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (!event.isFromGuild()) return;
-        if (event.getAuthor().isBot()) return;
 
         guildMessageEventFacade.onMessageSend(
             event.getGuild().getIdLong(),
@@ -42,7 +41,6 @@ public class GuildMessageEventListener extends ListenerAdapter {
     @Override
     public void onMessageUpdate(MessageUpdateEvent event) {
         if (!event.isFromGuild()) return;
-        if (event.getAuthor().isBot()) return;
 
         guildMessageEventFacade.onMessageUpdate(
             event.getGuild().getIdLong(),

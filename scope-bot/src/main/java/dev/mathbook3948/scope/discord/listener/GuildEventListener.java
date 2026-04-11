@@ -50,7 +50,6 @@ public class GuildEventListener extends ListenerAdapter {
 
         event.getGuild().loadMembers().onSuccess(members -> {
             List<GuildMemberInfo> guildMemberInfos = members.stream()
-                .filter(member -> !member.getUser().isBot())
                 .map(member -> new GuildMemberInfo(member.getIdLong(), member.getEffectiveName(), member.getEffectiveAvatarUrl()))
                 .toList();
             guildMemberFacade.upsertMembers(event.getGuild().getIdLong(), guildMemberInfos);

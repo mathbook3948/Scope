@@ -17,7 +17,6 @@ public class ReactionEventListener extends ListenerAdapter {
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
         if (!event.isFromGuild()) return;
-        if (event.getUser() != null && event.getUser().isBot()) return;
 
         guildReactionEventFacade.onReactionAdd(JdaMapper.toReactionEventInfo(event));
     }
@@ -25,7 +24,6 @@ public class ReactionEventListener extends ListenerAdapter {
     @Override
     public void onMessageReactionRemove(MessageReactionRemoveEvent event) {
         if (!event.isFromGuild()) return;
-        if (event.getUser() != null && event.getUser().isBot()) return;
 
         guildReactionEventFacade.onReactionRemove(JdaMapper.toReactionEventInfo(event));
     }
