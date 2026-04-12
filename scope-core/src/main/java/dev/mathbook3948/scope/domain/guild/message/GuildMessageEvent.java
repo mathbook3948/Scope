@@ -44,6 +44,10 @@ public class GuildMessageEvent {
     @Column(name = "event_type", nullable = false)
     private GuildMessageEventType eventType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "source_type", nullable = false)
+    private GuildMessageSourceType sourceType;
+
     @Column(name = "content_length")
     private Integer contentLength;
 
@@ -58,6 +62,7 @@ public class GuildMessageEvent {
         event.memberId = info.memberId();
         event.messageId = info.messageId();
         event.eventType = eventType;
+        event.sourceType = info.sourceType();
         event.contentLength = info.contentLength();
         return event;
     }
@@ -68,6 +73,7 @@ public class GuildMessageEvent {
         event.channelId = info.channelId();
         event.messageId = info.messageId();
         event.eventType = GuildMessageEventType.DELETE;
+        event.sourceType = info.sourceType();
         return event;
     }
 }

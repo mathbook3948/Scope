@@ -5,5 +5,6 @@ public record GuildMessageEventInfo(
     Long channelId,
     Long memberId,
     Long messageId,
-    Integer contentLength
+    Integer contentLength,
+    GuildMessageSourceType sourceType
 ) {}
