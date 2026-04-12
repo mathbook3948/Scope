@@ -2,6 +2,7 @@ package dev.mathbook3948.scope.discord.listener;
 
 import dev.mathbook3948.scope.discord.utils.JdaMapper;
 import dev.mathbook3948.scope.facade.GuildChannelFacade;
+import dev.mathbook3948.scope.facade.GuildThreadEventFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
@@ -19,11 +20,17 @@ import org.springframework.stereotype.Component;
 public class ChannelEventListener extends ListenerAdapter {
 
     private final GuildChannelFacade guildChannelFacade;
+    private final GuildThreadEventFacade guildThreadEventFacade;
 
     @Override
     public void onChannelCreate(ChannelCreateEvent event) {
         if (!event.isFromGuild()) return;
-        if (event.getChannel() instanceof ThreadChannel) return;
+
+        // Thread도 Channel 취급이어서 분기 처리
+        if (event.getChannel() instanceof ThreadChannel thread) {
+            guildThreadEventFacade.onThreadCreate(JdaMapper.toThreadEventInfo(thread));
+            return;
+        }
 
         guildChannelFacade.upsertChannel(event.getGuild().getIdLong(), JdaMapper.toChannelInfo(event.getChannel()));
     }
@@ -31,7 +38,12 @@ public class ChannelEventListener extends ListenerAdapter {
     @Override
     public void onChannelDelete(ChannelDeleteEvent event) {
         if (!event.isFromGuild()) return;
-        if (event.getChannel() instanceof ThreadChannel) return;
+
+        // Thread도 Channel 취급이어서 분기 처리
+        if (event.getChannel() instanceof ThreadChannel thread) {
+            guildThreadEventFacade.onThreadDelete(JdaMapper.toThreadEventInfo(thread));
+            return;
+        }
 
         guildChannelFacade.deleteChannel(
             event.getGuild().getIdLong(),
