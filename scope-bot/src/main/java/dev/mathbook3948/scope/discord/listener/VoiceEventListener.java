@@ -25,8 +25,9 @@ public class VoiceEventListener extends ListenerAdapter {
             GuildVoiceEventInfo info = new GuildVoiceEventInfo(guildId, event.getChannelLeft().getIdLong(), memberId);
             guildVoiceEventFacade.onVoiceLeave(info);
         } else {
-            GuildVoiceEventInfo info = new GuildVoiceEventInfo(guildId, event.getChannelJoined().getIdLong(), memberId);
-            guildVoiceEventFacade.onVoiceMove(info);
+            GuildVoiceEventInfo joinedInfo = new GuildVoiceEventInfo(guildId, event.getChannelJoined().getIdLong(), memberId);
+            GuildVoiceEventInfo leftInfo = new GuildVoiceEventInfo(guildId, event.getChannelLeft().getIdLong(), memberId);
+            guildVoiceEventFacade.onVoiceMove(joinedInfo, leftInfo);
         }
     }
 }

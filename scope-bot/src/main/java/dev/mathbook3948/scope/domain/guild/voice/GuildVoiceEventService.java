@@ -1,6 +1,7 @@
 package dev.mathbook3948.scope.domain.guild.voice;
 
 import java.time.Instant;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,5 +28,9 @@ public class GuildVoiceEventService {
     @Transactional
     public void deleteAllBefore(Instant before) {
         guildVoiceEventRepository.deleteAllByCreatedAtBefore(before);
+    }
+
+    public Optional<GuildVoiceEvent> findLatest(Long guildId, Long memberId) {
+        return guildVoiceEventRepository.findLatest(guildId, memberId);
     }
 }
