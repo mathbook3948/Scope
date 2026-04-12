@@ -8,6 +8,7 @@ import dev.mathbook3948.scope.domain.guild.member.GuildMemberService;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberStatService;
 import dev.mathbook3948.scope.domain.guild.message.GuildMessageEventService;
 import dev.mathbook3948.scope.domain.guild.reaction.GuildReactionEventService;
+import dev.mathbook3948.scope.domain.guild.thread.GuildThreadEventService;
 import dev.mathbook3948.scope.domain.guild.voice.GuildVoiceEventService;
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +30,7 @@ public class GuildFacade {
     private final GuildMessageEventService guildMessageEventService;
     private final GuildReactionEventService guildReactionEventService;
     private final GuildVoiceEventService guildVoiceEventService;
+    private final GuildThreadEventService guildThreadEventService;
 
     @Transactional
     public void upsertGuild(GuildInfo guild) {
@@ -47,6 +49,7 @@ public class GuildFacade {
         guildMessageEventService.deleteAllByGuildId(guildId);
         guildReactionEventService.deleteAllByGuildId(guildId);
         guildVoiceEventService.deleteAllByGuildId(guildId);
+        guildThreadEventService.deleteAllByGuildId(guildId);
         guildMemberService.deleteAllByGuildId(guildId);
         guildChannelService.deleteAllByGuildId(guildId);
         guildService.deleteGuild(guildId);

@@ -60,4 +60,7 @@ scope:
     guild-voice-stat-cleanup:
       cron: "0 0 1 * *"
       retention: 30d
+    guild-thread-event-cleanup:
+      cron: "0 0 1 * *"
+      retention: 30d
 
