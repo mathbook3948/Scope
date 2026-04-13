@@ -4,6 +4,7 @@ import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import dev.mathbook3948.scope.domain.guild.AuthorType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -48,6 +49,10 @@ public class GuildMessageEvent {
     @Column(name = "source_type", nullable = false)
     private GuildMessageSourceType sourceType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "author_type", nullable = false)
+    private AuthorType authorType;
+
     @Column(name = "content_length")
     private Integer contentLength;
 
@@ -63,6 +68,7 @@ public class GuildMessageEvent {
         event.messageId = info.messageId();
         event.eventType = eventType;
         event.sourceType = info.sourceType();
+        event.authorType = info.authorType();
         event.contentLength = info.contentLength();
         return event;
     }
@@ -74,6 +80,7 @@ public class GuildMessageEvent {
         event.messageId = info.messageId();
         event.eventType = GuildMessageEventType.DELETE;
         event.sourceType = info.sourceType();
+        event.authorType = info.authorType();
         return event;
     }
 }

@@ -1,9 +1,11 @@
 package dev.mathbook3948.scope.discord.listener;
 
+import dev.mathbook3948.scope.domain.guild.AuthorType;
 import dev.mathbook3948.scope.domain.guild.message.GuildMessageEventInfo;
 import dev.mathbook3948.scope.domain.guild.message.GuildMessageSourceType;
 import dev.mathbook3948.scope.facade.GuildMessageEventFacade;
 import lombok.RequiredArgsConstructor;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
@@ -23,13 +25,15 @@ public class GuildMessageEventListener extends ListenerAdapter {
         if (!event.isFromGuild()) return;
 
         String content = event.getMessage().getContentRaw();
+        User author = event.getAuthor();
         GuildMessageEventInfo info = new GuildMessageEventInfo(
             event.getGuild().getIdLong(),
             event.getChannel().getIdLong(),
-            event.getAuthor().getIdLong(),
+            author.getIdLong(),
             event.getMessageIdLong(),
             content.codePointCount(0, content.length()),
-            sourceTypeOf(event.getChannel())
+            sourceTypeOf(event.getChannel()),
+            AuthorType.from(author.isBot(), author.isSystem())
         );
         guildMessageEventFacade.onMessageSend(info);
     }
@@ -44,7 +48,8 @@ public class GuildMessageEventListener extends ListenerAdapter {
             null,
             event.getMessageIdLong(),
             null,
-            sourceTypeOf(event.getChannel())
+            sourceTypeOf(event.getChannel()),
+            AuthorType.UNKNOWN
         );
         guildMessageEventFacade.onMessageDelete(info);
     }
@@ -54,13 +59,15 @@ public class GuildMessageEventListener extends ListenerAdapter {
         if (!event.isFromGuild()) return;
 
         String content = event.getMessage().getContentRaw();
+        User author = event.getAuthor();
         GuildMessageEventInfo info = new GuildMessageEventInfo(
             event.getGuild().getIdLong(),
             event.getChannel().getIdLong(),
-            event.getAuthor().getIdLong(),
+            author.getIdLong(),
             event.getMessageIdLong(),
             content.codePointCount(0, content.length()),
-            sourceTypeOf(event.getChannel())
+            sourceTypeOf(event.getChannel()),
+            AuthorType.from(author.isBot(), author.isSystem())
         );
         guildMessageEventFacade.onMessageUpdate(info);
     }

@@ -1,12 +1,15 @@
 package dev.mathbook3948.scope.discord.utils;
 
+import dev.mathbook3948.scope.domain.guild.AuthorType;
 import dev.mathbook3948.scope.domain.guild.channel.GuildChannelInfo;
 import dev.mathbook3948.scope.domain.guild.channel.GuildChannelType;
 import dev.mathbook3948.scope.domain.guild.reaction.GuildReactionEventInfo;
 import dev.mathbook3948.scope.domain.guild.thread.GuildThreadEventInfo;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.Channel;
+
 import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
 import net.dv8tion.jda.api.entities.channel.attribute.IPositionableChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
@@ -46,12 +49,17 @@ public class JdaMapper {
     }
 
     public static GuildReactionEventInfo toReactionEventInfo(GenericMessageReactionEvent event) {
+        User user = event.getUser();
+        AuthorType authorType = user == null
+            ? AuthorType.UNKNOWN
+            : AuthorType.from(user.isBot(), user.isSystem());
         return new GuildReactionEventInfo(
             event.getGuild().getIdLong(),
             event.getChannel().getIdLong(),
             event.getMessageIdLong(),
             event.getUserIdLong(),
-            event.getReaction().getEmoji().getAsReactionCode()
+            event.getReaction().getEmoji().getAsReactionCode(),
+            authorType
         );
     }
 

@@ -4,6 +4,7 @@ import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import dev.mathbook3948.scope.domain.guild.AuthorType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -46,6 +47,10 @@ public class GuildReactionEvent {
     @Column(name = "event_type", nullable = false)
     private GuildReactionEventType eventType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "author_type", nullable = false)
+    private AuthorType authorType;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -58,6 +63,7 @@ public class GuildReactionEvent {
         event.memberId = reaction.memberId();
         event.emoji = reaction.emoji();
         event.eventType = eventType;
+        event.authorType = reaction.authorType();
         return event;
     }
 }
