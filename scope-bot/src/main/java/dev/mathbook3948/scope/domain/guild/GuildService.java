@@ -24,7 +24,11 @@ public class GuildService {
 
     @Transactional
     public void createGuild(Long guildId, String name, String iconUrl) {
-        guildRepository.save(Guild.of(guildId, name, iconUrl));
+        guildRepository.save(Guild.builder()
+            .guildId(guildId)
+            .name(name)
+            .iconUrl(iconUrl)
+            .build());
     }
 
     @Transactional
@@ -35,7 +39,11 @@ public class GuildService {
                     g.updateName(guild.name());
                     g.updateIconUrl(guild.iconUrl());
                 },
-                () -> guildRepository.save(Guild.of(guild.guildId(), guild.name(), guild.iconUrl()))
+                () -> guildRepository.save(Guild.builder()
+                    .guildId(guild.guildId())
+                    .name(guild.name())
+                    .iconUrl(guild.iconUrl())
+                    .build())
             );
     }
 
@@ -59,7 +67,11 @@ public class GuildService {
                     existing.updateIconUrl(info.iconUrl());
                 }
             } else {
-                newGuilds.add(Guild.of(info.guildId(), info.name(), info.iconUrl()));
+                newGuilds.add(Guild.builder()
+                    .guildId(info.guildId())
+                    .name(info.name())
+                    .iconUrl(info.iconUrl())
+                    .build());
             }
         }
 

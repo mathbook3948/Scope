@@ -8,6 +8,8 @@ import jakarta.persistence.PostPersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,10 +22,13 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "t_scp_guild")
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Guild implements Persistable<Long>{
 
     @Transient
+    @Builder.Default
     private boolean isNew = true;
 
     @Id
@@ -53,14 +58,6 @@ public class Guild implements Persistable<Long>{
     @PostPersist
     @PostLoad
     void markNotNew() { this.isNew = false; }
-
-    public static Guild of(Long guildId, String name, String iconUrl) {
-        Guild guild = new Guild();
-        guild.guildId = guildId;
-        guild.name = name;
-        guild.iconUrl = iconUrl;
-        return guild;
-    }
 
     public void updateName(String name) {
         this.name = name;

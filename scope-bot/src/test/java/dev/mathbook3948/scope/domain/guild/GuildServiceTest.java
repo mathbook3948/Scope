@@ -26,7 +26,7 @@ class GuildServiceTest {
     @DisplayName("기존 길드는 이름을 업데이트하고 신규 길드는 저장한다")
     void upsertGuilds_mixedExistingAndNew_updatesExistingAndSavesNew() {
         // given
-        Guild existing = Guild.of(1L, "OldName", "old-icon.png");
+        Guild existing = Guild.builder().guildId(1L).name("OldName").iconUrl("old-icon.png").build();
         when(guildRepository.findAllById(List.of(1L, 2L))).thenReturn(List.of(existing));
 
         List<GuildInfo> guilds = List.of(
@@ -55,7 +55,7 @@ class GuildServiceTest {
     @DisplayName("모두 기존 길드이고 모든 항목이 같으면 저장하지 않는다")
     void upsertGuilds_allExistingSameName_noSave() {
         // given
-        Guild existing = Guild.of(1L, "SameName", "same-icon.png");
+        Guild existing = Guild.builder().guildId(1L).name("SameName").iconUrl("same-icon.png").build();
         when(guildRepository.findAllById(List.of(1L))).thenReturn(List.of(existing));
 
         // when
