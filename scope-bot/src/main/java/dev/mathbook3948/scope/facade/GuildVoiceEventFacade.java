@@ -56,7 +56,7 @@ public class GuildVoiceEventFacade {
                     if (!startEvent.getChannelId().equals(info.channelId())) {
                         return;
                     }
-                    long duration = Duration.between(startEvent.getCreatedAt(), Instant.now()).getSeconds();
+                    long duration = Duration.between(startEvent.getCreatedAt(), info.createdAt()).getSeconds();
                     guildVoiceStatService.createGuildVoiceStat(info, duration);
                 });
     }

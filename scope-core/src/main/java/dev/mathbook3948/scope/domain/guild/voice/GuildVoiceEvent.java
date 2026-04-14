@@ -2,8 +2,6 @@ package dev.mathbook3948.scope.domain.guild.voice;
 
 import java.time.Instant;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -50,7 +48,6 @@ public class GuildVoiceEvent {
     @Column(name = "event_type", nullable = false)
     private GuildVoiceEventType eventType;
 
-    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -60,6 +57,7 @@ public class GuildVoiceEvent {
         event.channelId = info.channelId();
         event.memberId = info.memberId();
         event.eventType = eventType;
+        event.createdAt = info.createdAt();
         return event;
     }
 }

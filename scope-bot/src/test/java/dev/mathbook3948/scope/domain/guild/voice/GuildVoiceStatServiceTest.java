@@ -26,7 +26,7 @@ class GuildVoiceStatServiceTest {
     @DisplayName("음성 채널 체류 통계를 정상적으로 저장한다")
     void createGuildVoiceStat_validInput_savesEntity() {
         // given
-        GuildVoiceEventInfo info = new GuildVoiceEventInfo(1L, 100L, 200L);
+        GuildVoiceEventInfo info = new GuildVoiceEventInfo(1L, 100L, 200L, Instant.parse("2026-04-14T12:00:00Z"));
         long duration = 3600L;
 
         // when
