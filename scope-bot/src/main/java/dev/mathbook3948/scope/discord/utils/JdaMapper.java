@@ -7,6 +7,7 @@ import dev.mathbook3948.scope.domain.guild.message.GuildMessageEventInfo;
 import dev.mathbook3948.scope.domain.guild.message.GuildMessageSourceType;
 import dev.mathbook3948.scope.domain.guild.reaction.GuildReactionEventInfo;
 import dev.mathbook3948.scope.domain.guild.thread.GuildThreadEventInfo;
+import dev.mathbook3948.scope.utils.CommonUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.dv8tion.jda.api.entities.Message;
@@ -24,15 +25,11 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
 
-import java.util.regex.Pattern;
-
 /**
  * JDA 타입을 도메인 타입으로 변환하는 유틸 클래스
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JdaMapper {
-
-    private static final Pattern URL_PATTERN = Pattern.compile("https?://\\S+", Pattern.CASE_INSENSITIVE);
 
     /**
      * JDA Channel을 {@link GuildChannelInfo}로 변환한다.
@@ -89,7 +86,7 @@ public class JdaMapper {
             content.codePointCount(0, content.length()),
             message.getMentions().getUsers().size(),
             message.getAttachments().size(),
-            URL_PATTERN.matcher(content).find(),
+            CommonUtil.hasUrl(content),
             sourceTypeOf(event.getChannel()),
             AuthorType.from(author.isBot(), author.isSystem())
         );
@@ -108,7 +105,7 @@ public class JdaMapper {
             content.codePointCount(0, content.length()),
             message.getMentions().getUsers().size(),
             message.getAttachments().size(),
-            URL_PATTERN.matcher(content).find(),
+            CommonUtil.hasUrl(content),
             sourceTypeOf(event.getChannel()),
             AuthorType.from(author.isBot(), author.isSystem())
         );
