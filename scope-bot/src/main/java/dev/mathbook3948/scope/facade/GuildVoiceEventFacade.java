@@ -59,15 +59,15 @@ public class GuildVoiceEventFacade {
 
     private void saveVoiceStat(GuildVoiceEventInfo info) {
         guildVoiceEventService.findLatest(info.guildId(), info.memberId())
-                .ifPresent(startEvent -> {
-                    if (startEvent.getEventType() == GuildVoiceEventType.LEAVE) {
-                        return;
-                    }
-                    if (!startEvent.getChannelId().equals(info.channelId())) {
-                        return;
-                    }
-                    long duration = Duration.between(startEvent.getCreatedAt(), info.createdAt()).getSeconds();
-                    guildVoiceStatService.createGuildVoiceStat(info, duration);
-                });
+            .ifPresent(startEvent -> {
+                if (startEvent.getEventType() == GuildVoiceEventType.LEAVE) {
+                    return;
+                }
+                if (!startEvent.getChannelId().equals(info.channelId())) {
+                    return;
+                }
+                long duration = Duration.between(startEvent.getCreatedAt(), info.createdAt()).getSeconds();
+                guildVoiceStatService.createGuildVoiceStat(info, duration);
+            });
     }
 }
