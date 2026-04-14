@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dev.mathbook3948.scope.domain.guild.GuildService;
+import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventCountView;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventService;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventType;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberInfo;
@@ -99,13 +100,10 @@ public class GuildMemberFacade {
         // since별로 단일 GROUP BY 카운트 쿼리. 이벤트 row가 JVM에 들어오지 않음
         Map<Long, Map<GuildMemberEventType, Integer>> eventCounts = new HashMap<>();
         for (Map.Entry<Instant, List<Long>> entry : guildsBySince.entrySet()) {
-            for (Object[] row : guildMemberEventService.countByGuildAndTypeAfter(entry.getValue(), entry.getKey(), runAt)) {
-                Long guildId = (Long) row[0];
-                GuildMemberEventType type = (GuildMemberEventType) row[1];
-                int count = ((Number) row[2]).intValue();
+            for (GuildMemberEventCountView row : guildMemberEventService.countByGuildAndTypeAfter(entry.getValue(), entry.getKey(), runAt)) {
                 eventCounts
-                    .computeIfAbsent(guildId, k -> new HashMap<>())
-                    .put(type, count);
+                    .computeIfAbsent(row.guildId(), k -> new HashMap<>())
+                    .put(row.eventType(), row.count().intValue());
             }
         }
 

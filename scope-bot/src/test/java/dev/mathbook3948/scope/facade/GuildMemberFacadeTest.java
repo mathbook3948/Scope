@@ -48,8 +48,8 @@ class GuildMemberFacadeTest {
         when(guildMemberStatService.findLatestCreatedAtPerGuild()).thenReturn(Map.of());
         when(guildMemberEventService.countByGuildAndTypeAfter(eq(List.of(guildId)), eq(Instant.EPOCH), any(Instant.class)))
             .thenReturn(List.of(
-                new Object[]{guildId, GuildMemberEventType.JOIN, 2L},
-                new Object[]{guildId, GuildMemberEventType.LEAVE, 1L}
+                new GuildMemberEventCountView(guildId, GuildMemberEventType.JOIN, 2L),
+                new GuildMemberEventCountView(guildId, GuildMemberEventType.LEAVE, 1L)
             ));
         when(guildMemberService.countPerGuild()).thenReturn(Map.of(guildId, 1L));
 
@@ -107,8 +107,8 @@ class GuildMemberFacadeTest {
             .thenReturn(Map.of(guild1, lastStatAt, guild2, lastStatAt));
         when(guildMemberEventService.countByGuildAndTypeAfter(argThat(containsExactlyInAnyOrder(guild1, guild2)), eq(lastStatAt), any(Instant.class)))
             .thenReturn(List.of(
-                new Object[]{guild1, GuildMemberEventType.JOIN, 3L},
-                new Object[]{guild2, GuildMemberEventType.LEAVE, 1L}
+                new GuildMemberEventCountView(guild1, GuildMemberEventType.JOIN, 3L),
+                new GuildMemberEventCountView(guild2, GuildMemberEventType.LEAVE, 1L)
             ));
         when(guildMemberService.countPerGuild()).thenReturn(Map.of(guild1, 20L, guild2, 5L));
 
@@ -144,11 +144,11 @@ class GuildMemberFacadeTest {
 
         // history가 있는 길드는 lastStatAt 기준으로, 없는 길드는 EPOCH 기준으로 별도 쿼리
         when(guildMemberEventService.countByGuildAndTypeAfter(eq(List.of(guildWithHistory)), eq(lastStatAt), any(Instant.class)))
-            .thenReturn(List.<Object[]>of(new Object[]{guildWithHistory, GuildMemberEventType.JOIN, 1L}));
+            .thenReturn(List.of(new GuildMemberEventCountView(guildWithHistory, GuildMemberEventType.JOIN, 1L)));
         when(guildMemberEventService.countByGuildAndTypeAfter(eq(List.of(guildWithoutHistory)), eq(Instant.EPOCH), any(Instant.class)))
-            .thenReturn(List.<Object[]>of(
-                new Object[]{guildWithoutHistory, GuildMemberEventType.JOIN, 1L},
-                new Object[]{guildWithoutHistory, GuildMemberEventType.LEAVE, 1L}
+            .thenReturn(List.of(
+                new GuildMemberEventCountView(guildWithoutHistory, GuildMemberEventType.JOIN, 1L),
+                new GuildMemberEventCountView(guildWithoutHistory, GuildMemberEventType.LEAVE, 1L)
             ));
 
         when(guildMemberService.countPerGuild()).thenReturn(Map.of(guildWithHistory, 20L, guildWithoutHistory, 5L));

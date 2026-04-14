@@ -24,8 +24,8 @@ public class GuildMemberStatService {
 
     public Map<Long, Instant> findLatestCreatedAtPerGuild() {
         Map<Long, Instant> result = new HashMap<>();
-        for (Object[] row : guildMemberStatRepository.findLatestCreatedAtPerGuild()) {
-            result.put((Long) row[0], (Instant) row[1]);
+        for (GuildMemberStatLatestView row : guildMemberStatRepository.findLatestCreatedAtPerGuild()) {
+            result.put(row.guildId(), row.latestCreatedAt());
         }
         return result;
     }

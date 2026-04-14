@@ -46,8 +46,8 @@ public class GuildMemberService {
 
     public Map<Long, Long> countPerGuild() {
         Map<Long, Long> result = new HashMap<>();
-        for (Object[] row : guildMemberRepository.countPerGuild()) {
-            result.put((Long) row[0], (Long) row[1]);
+        for (GuildMemberCountView row : guildMemberRepository.countPerGuild()) {
+            result.put(row.guildId(), row.count());
         }
         return result;
     }

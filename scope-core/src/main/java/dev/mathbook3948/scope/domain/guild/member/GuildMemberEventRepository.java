@@ -13,14 +13,14 @@ public interface GuildMemberEventRepository extends JpaRepository<GuildMemberEve
     int countByGuildIdAndEventTypeAndCreatedAtAfter(Long guildId, GuildMemberEventType eventType, Instant after);
 
     @Query("""
-            SELECT e.guildId, e.eventType, COUNT(e)
+            SELECT new dev.mathbook3948.scope.domain.guild.member.GuildMemberEventCountView(e.guildId, e.eventType, COUNT(e))
             FROM GuildMemberEvent e
             WHERE e.guildId IN :guildIds
               AND e.createdAt > :since
               AND e.createdAt <= :runAt
             GROUP BY e.guildId, e.eventType
             """)
-    List<Object[]> countByGuildAndTypeAfter(
+    List<GuildMemberEventCountView> countByGuildAndTypeAfter(
         @Param("guildIds") List<Long> guildIds,
         @Param("since") Instant since,
         @Param("runAt") Instant runAt

@@ -18,8 +18,8 @@ public interface GuildMemberRepository extends JpaRepository<GuildMember, Long> 
 
     int countByGuild_GuildId(Long guildId);
 
-    @Query("SELECT m.guild.guildId, COUNT(m) FROM GuildMember m GROUP BY m.guild.guildId")
-    List<Object[]> countPerGuild();
+    @Query("SELECT new dev.mathbook3948.scope.domain.guild.member.GuildMemberCountView(m.guild.guildId, COUNT(m)) FROM GuildMember m GROUP BY m.guild.guildId")
+    List<GuildMemberCountView> countPerGuild();
 
     @Modifying
     @Query("DELETE FROM GuildMember m WHERE m.guild.guildId = :guildId")
