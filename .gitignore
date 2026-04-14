@@ -42,3 +42,6 @@ config/application.yaml
 
 ### CLAUDE ###
 CLAUDE.md
+
+### docs ###
+docs
