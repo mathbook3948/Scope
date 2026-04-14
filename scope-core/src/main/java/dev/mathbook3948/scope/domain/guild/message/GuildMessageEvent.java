@@ -53,8 +53,20 @@ public class GuildMessageEvent {
     @Column(name = "author_type", nullable = false)
     private AuthorType authorType;
 
+    @Column(name = "reply_to_message_id")
+    private Long replyToMessageId;
+
     @Column(name = "content_length")
     private Integer contentLength;
+
+    @Column(name = "mention_count")
+    private Integer mentionCount;
+
+    @Column(name = "attachment_count")
+    private Integer attachmentCount;
+
+    @Column(name = "has_link")
+    private Boolean hasLink;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -66,10 +78,14 @@ public class GuildMessageEvent {
         event.channelId = info.channelId();
         event.memberId = info.memberId();
         event.messageId = info.messageId();
+        event.replyToMessageId = info.replyToMessageId();
         event.eventType = eventType;
         event.sourceType = info.sourceType();
         event.authorType = info.authorType();
         event.contentLength = info.contentLength();
+        event.mentionCount = info.mentionCount();
+        event.attachmentCount = info.attachmentCount();
+        event.hasLink = info.hasLink();
         return event;
     }
 

@@ -7,7 +7,11 @@ public record GuildMessageEventInfo(
     Long channelId,
     Long memberId,
     Long messageId,
+    Long replyToMessageId,
     Integer contentLength,
+    Integer mentionCount,
+    Integer attachmentCount,
+    Boolean hasLink,
     GuildMessageSourceType sourceType,
     AuthorType authorType
 ) {}

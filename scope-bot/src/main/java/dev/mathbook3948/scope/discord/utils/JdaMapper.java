@@ -9,6 +9,8 @@ import dev.mathbook3948.scope.domain.guild.reaction.GuildReactionEventInfo;
 import dev.mathbook3948.scope.domain.guild.thread.GuildThreadEventInfo;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageReference;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.Channel;
 
@@ -22,11 +24,15 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
 
+import java.util.regex.Pattern;
+
 /**
  * JDA 타입을 도메인 타입으로 변환하는 유틸 클래스
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JdaMapper {
+
+    private static final Pattern URL_PATTERN = Pattern.compile("https?://\\S+", Pattern.CASE_INSENSITIVE);
 
     /**
      * JDA Channel을 {@link GuildChannelInfo}로 변환한다.
@@ -71,28 +77,38 @@ public class JdaMapper {
     }
 
     public static GuildMessageEventInfo toMessageEventInfo(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
+        Message message = event.getMessage();
+        String content = message.getContentRaw();
         User author = event.getAuthor();
         return new GuildMessageEventInfo(
             event.getGuild().getIdLong(),
             event.getChannel().getIdLong(),
             author.getIdLong(),
             event.getMessageIdLong(),
+            replyToMessageIdOf(message),
             content.codePointCount(0, content.length()),
+            message.getMentions().getUsers().size(),
+            message.getAttachments().size(),
+            URL_PATTERN.matcher(content).find(),
             sourceTypeOf(event.getChannel()),
             AuthorType.from(author.isBot(), author.isSystem())
         );
     }
 
     public static GuildMessageEventInfo toMessageEventInfo(MessageUpdateEvent event) {
-        String content = event.getMessage().getContentRaw();
+        Message message = event.getMessage();
+        String content = message.getContentRaw();
         User author = event.getAuthor();
         return new GuildMessageEventInfo(
             event.getGuild().getIdLong(),
             event.getChannel().getIdLong(),
             author.getIdLong(),
             event.getMessageIdLong(),
+            replyToMessageIdOf(message),
             content.codePointCount(0, content.length()),
+            message.getMentions().getUsers().size(),
+            message.getAttachments().size(),
+            URL_PATTERN.matcher(content).find(),
             sourceTypeOf(event.getChannel()),
             AuthorType.from(author.isBot(), author.isSystem())
         );
@@ -105,9 +121,25 @@ public class JdaMapper {
             null,
             event.getMessageIdLong(),
             null,
+            null,
+            null,
+            null,
+            null,
             sourceTypeOf(event.getChannel()),
             AuthorType.UNKNOWN
         );
+    }
+
+    /**
+     * 답장(reply) 대상 메시지 ID를 추출한다.
+     * <p>{@link MessageReference}는 답장 외 채널 참조 등에도 쓰이며, 이 경우
+     * {@code getMessageIdLong()}이 {@code 0L}을 반환하므로 null로 정규화한다.
+     */
+    private static Long replyToMessageIdOf(Message message) {
+        MessageReference ref = message.getMessageReference();
+        if (ref == null) return null;
+        long id = ref.getMessageIdLong();
+        return id == 0L ? null : id;
     }
 
     /**
