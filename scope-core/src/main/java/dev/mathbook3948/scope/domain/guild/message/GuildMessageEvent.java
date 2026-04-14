@@ -7,6 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import dev.mathbook3948.scope.domain.guild.AuthorType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +22,8 @@ import lombok.NoArgsConstructor;
     @Index(name = "idx_message_event_guild_id_member_id", columnList = "guild_id, member_id")
 })
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GuildMessageEvent {
 
@@ -71,32 +75,4 @@ public class GuildMessageEvent {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
-    public static GuildMessageEvent of(GuildMessageEventInfo info, GuildMessageEventType eventType) {
-        GuildMessageEvent event = new GuildMessageEvent();
-        event.guildId = info.guildId();
-        event.channelId = info.channelId();
-        event.memberId = info.memberId();
-        event.messageId = info.messageId();
-        event.replyToMessageId = info.replyToMessageId();
-        event.eventType = eventType;
-        event.sourceType = info.sourceType();
-        event.authorType = info.authorType();
-        event.contentLength = info.contentLength();
-        event.mentionCount = info.mentionCount();
-        event.attachmentCount = info.attachmentCount();
-        event.hasLink = info.hasLink();
-        return event;
-    }
-
-    public static GuildMessageEvent ofDelete(GuildMessageEventInfo info) {
-        GuildMessageEvent event = new GuildMessageEvent();
-        event.guildId = info.guildId();
-        event.channelId = info.channelId();
-        event.messageId = info.messageId();
-        event.eventType = GuildMessageEventType.DELETE;
-        event.sourceType = info.sourceType();
-        event.authorType = info.authorType();
-        return event;
-    }
 }

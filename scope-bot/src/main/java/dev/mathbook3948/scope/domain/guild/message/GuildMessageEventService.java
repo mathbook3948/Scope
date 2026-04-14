@@ -20,12 +20,32 @@ public class GuildMessageEventService {
 
     @Transactional
     public void createGuildMessageEvent(GuildMessageEventInfo info, GuildMessageEventType eventType) {
-        guildMessageEventRepository.save(GuildMessageEvent.of(info, eventType));
+        guildMessageEventRepository.save(GuildMessageEvent.builder()
+            .guildId(info.guildId())
+            .channelId(info.channelId())
+            .memberId(info.memberId())
+            .messageId(info.messageId())
+            .replyToMessageId(info.replyToMessageId())
+            .eventType(eventType)
+            .sourceType(info.sourceType())
+            .authorType(info.authorType())
+            .contentLength(info.contentLength())
+            .mentionCount(info.mentionCount())
+            .attachmentCount(info.attachmentCount())
+            .hasLink(info.hasLink())
+            .build());
     }
 
     @Transactional
     public void createDeleteEvent(GuildMessageEventInfo info) {
-        guildMessageEventRepository.save(GuildMessageEvent.ofDelete(info));
+        guildMessageEventRepository.save(GuildMessageEvent.builder()
+            .guildId(info.guildId())
+            .channelId(info.channelId())
+            .messageId(info.messageId())
+            .eventType(GuildMessageEventType.DELETE)
+            .sourceType(info.sourceType())
+            .authorType(info.authorType())
+            .build());
     }
 
     @Transactional
