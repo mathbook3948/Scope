@@ -15,6 +15,8 @@ import jakarta.persistence.Index;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +29,8 @@ import lombok.NoArgsConstructor;
         @Index(name = "idx_thread_event_guild_id", columnList = "guild_id")
 })
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GuildThreadEvent {
 
@@ -58,15 +62,4 @@ public class GuildThreadEvent {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
-    public static GuildThreadEvent of(GuildThreadEventInfo info, GuildThreadEventType eventType) {
-        GuildThreadEvent event = new GuildThreadEvent();
-        event.guildId = info.guildId();
-        event.parentChannelId = info.parentChannelId();
-        event.threadId = info.threadId();
-        event.ownerId = info.ownerId();
-        event.name = info.name();
-        event.eventType = eventType;
-        return event;
-    }
 }

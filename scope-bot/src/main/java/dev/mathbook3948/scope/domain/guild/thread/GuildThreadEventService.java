@@ -16,7 +16,14 @@ public class GuildThreadEventService {
 
     @Transactional
     public void createGuildThreadEvent(GuildThreadEventInfo info, GuildThreadEventType eventType) {
-        guildThreadEventRepository.save(GuildThreadEvent.of(info, eventType));
+        guildThreadEventRepository.save(GuildThreadEvent.builder()
+            .guildId(info.guildId())
+            .parentChannelId(info.parentChannelId())
+            .threadId(info.threadId())
+            .ownerId(info.ownerId())
+            .name(info.name())
+            .eventType(eventType)
+            .build());
     }
 
     @Transactional
