@@ -58,6 +58,7 @@ public class GuildVoiceEventFacade {
     }
 
     private void saveVoiceStat(GuildVoiceEventInfo info) {
+        //TODO 캐시처리
         guildVoiceEventService.findLatest(info.guildId(), info.memberId())
             .ifPresent(startEvent -> {
                 if (startEvent.getEventType() == GuildVoiceEventType.LEAVE) {
