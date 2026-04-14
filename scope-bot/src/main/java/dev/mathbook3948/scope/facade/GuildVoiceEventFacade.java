@@ -37,11 +37,21 @@ public class GuildVoiceEventFacade {
         guildVoiceEventService.createGuildVoiceEvent(joinedInfo, GuildVoiceEventType.MOVE);
     }
 
+    /**
+     * 보관 기간이 지난 GuildVoiceEvent를 일괄 삭제한다.
+     *
+     * @see dev.mathbook3948.scope.job.GuildVoiceEventCleanupJob
+     */
     @Transactional
     public void cleanupGuildVoiceEvents(Instant before) {
         guildVoiceEventService.deleteAllBefore(before);
     }
 
+    /**
+     * 보관 기간이 지난 GuildVoiceStat을 일괄 삭제한다.
+     *
+     * @see dev.mathbook3948.scope.job.GuildVoiceStatCleanupJob
+     */
     @Transactional
     public void cleanupGuildVoiceStats(Instant before) {
         guildVoiceStatService.deleteAllBefore(before);
