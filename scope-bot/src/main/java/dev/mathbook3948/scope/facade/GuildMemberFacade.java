@@ -83,13 +83,8 @@ public class GuildMemberFacade {
         List<Long> guildIds = guildService.findAllGuildIds();
         if (guildIds.isEmpty()) return;
 
-        // 같은 cron 실행 = 같은 스냅샷 시점. 다음 회차 since-그룹화를 위해 모든 stat 동일 시각.
-        // µs로 절단해 PostgreSQL timestamp(6) 정밀도와 일치시켜 저장-읽기 라운드트립 손실 제거.
-        // TODO: READ COMMITTED race window — JVM에서 @CreationTimestamp 찍힌 시점(t_jvm)과
-        //  해당 Tx commit 시점(t_commit) 사이에 aggregation 쿼리가 실행되면 이벤트가 영구 누락된다.
-        //  (aggregation이 t_jvm < t_read < t_commit 사이 읽으면 못 보고, 다음 회차는 since > t_jvm이라 제외)
-        //  완화 방안: runAt에 skew window 적용(`now().minus(N)`). 현재는 봇 쓰기 commit 지연이 ms 단위라 무시.
-        //  관측 시 대응 우선순위 재평가 필요.
+        // 같은 cron 실행 = 같은 스냅샷 시점. µs 절단으로 PostgreSQL timestamp(6)과 정밀도 일치.
+        // TODO: 거의 없을거 같깉 한데 t_jvm과 t_commit 사이 aggregation 실행 시 이벤트 누락 가능. 필요 시 skew window 적용. 당장은 X
         Instant runAt = Instant.now().truncatedTo(ChronoUnit.MICROS);
 
         Map<Long, Instant> latestStatAt = guildMemberStatService.findLatestCreatedAtPerGuild();
