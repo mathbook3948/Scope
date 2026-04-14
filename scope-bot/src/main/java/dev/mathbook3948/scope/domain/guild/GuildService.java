@@ -22,10 +22,6 @@ public class GuildService {
         return guildRepository.findAllGuildIds();
     }
 
-    public Guild getReferenceById(Long guildId) {
-        return guildRepository.getReferenceById(guildId);
-    }
-
     @Transactional
     public void createGuild(Long guildId, String name, String iconUrl) {
         guildRepository.save(Guild.of(guildId, name, iconUrl));
