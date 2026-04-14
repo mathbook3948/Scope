@@ -38,6 +38,9 @@ public class GuildMember {
     @Column(name = "avatar_url", nullable = false, columnDefinition = "text")
     private String avatarUrl;
 
+    @Column(name = "account_created_at", nullable = false, updatable = false)
+    private Instant accountCreatedAt;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -46,12 +49,13 @@ public class GuildMember {
     @Column(name = "updated_at", nullable = false, updatable = true)
     private Instant updatedAt;
 
-    public static GuildMember of(Guild guild, Long memberId, String name, String avatarUrl) {
+    public static GuildMember of(Guild guild, Long memberId, String name, String avatarUrl, Instant accountCreatedAt) {
         GuildMember guildMember = new GuildMember();
         guildMember.guild = guild;
         guildMember.memberId = memberId;
         guildMember.name = name;
         guildMember.avatarUrl = avatarUrl;
+        guildMember.accountCreatedAt = accountCreatedAt;
         return guildMember;
     }
 

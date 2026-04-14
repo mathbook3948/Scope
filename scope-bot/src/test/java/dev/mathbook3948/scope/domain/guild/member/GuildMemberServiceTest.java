@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,6 +18,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GuildMemberServiceTest {
+
+    private static final Instant ACCOUNT_CREATED = Instant.parse("2020-01-01T00:00:00Z");
 
     @InjectMocks
     GuildMemberService guildMemberService;
@@ -33,15 +36,15 @@ class GuildMemberServiceTest {
         // given
         Long guildId = 1L;
         Guild guildRef = Guild.of(guildId, "TestGuild", null);
-        GuildMember existing = GuildMember.of(guildRef, 101L, "OldName", "old.png");
+        GuildMember existing = GuildMember.of(guildRef, 101L, "OldName", "old.png", ACCOUNT_CREATED);
 
         when(guildMemberRepository.findByGuild_GuildIdAndMemberIdIn(guildId, List.of(101L, 102L)))
             .thenReturn(List.of(existing));
         when(guildRepository.getReferenceById(guildId)).thenReturn(guildRef);
 
         List<GuildMemberInfo> members = List.of(
-            new GuildMemberInfo(101L, "NewName", "new.png"),
-            new GuildMemberInfo(102L, "BrandNew", "brand.png")
+            new GuildMemberInfo(101L, "NewName", "new.png", ACCOUNT_CREATED),
+            new GuildMemberInfo(102L, "BrandNew", "brand.png", ACCOUNT_CREATED)
         );
 
         // when
@@ -67,13 +70,13 @@ class GuildMemberServiceTest {
         // given
         Long guildId = 1L;
         Guild guildRef = Guild.of(guildId, "TestGuild", null);
-        GuildMember existing = GuildMember.of(guildRef, 101L, "Name", "avatar.png");
+        GuildMember existing = GuildMember.of(guildRef, 101L, "Name", "avatar.png", ACCOUNT_CREATED);
 
         when(guildMemberRepository.findByGuild_GuildIdAndMemberIdIn(guildId, List.of(101L)))
             .thenReturn(List.of(existing));
 
         // when
-        guildMemberService.upsertGuildMembers(guildId, List.of(new GuildMemberInfo(101L, "Name", "avatar.png")));
+        guildMemberService.upsertGuildMembers(guildId, List.of(new GuildMemberInfo(101L, "Name", "avatar.png", ACCOUNT_CREATED)));
 
         // then
         verify(guildMemberRepository, never()).saveAll(any());
@@ -91,8 +94,8 @@ class GuildMemberServiceTest {
         when(guildRepository.getReferenceById(guildId)).thenReturn(guildRef);
 
         List<GuildMemberInfo> members = List.of(
-            new GuildMemberInfo(101L, "Member1", "a1.png"),
-            new GuildMemberInfo(102L, "Member2", "a2.png")
+            new GuildMemberInfo(101L, "Member1", "a1.png", ACCOUNT_CREATED),
+            new GuildMemberInfo(102L, "Member2", "a2.png", ACCOUNT_CREATED)
         );
 
         // when

@@ -3,6 +3,7 @@ package dev.mathbook3948.scope.discord.utils;
 import dev.mathbook3948.scope.domain.guild.AuthorType;
 import dev.mathbook3948.scope.domain.guild.channel.GuildChannelInfo;
 import dev.mathbook3948.scope.domain.guild.channel.GuildChannelType;
+import dev.mathbook3948.scope.domain.guild.member.GuildMemberInfo;
 import dev.mathbook3948.scope.domain.guild.message.GuildMessageEventInfo;
 import dev.mathbook3948.scope.domain.guild.message.GuildMessageSourceType;
 import dev.mathbook3948.scope.domain.guild.reaction.GuildReactionEventInfo;
@@ -10,6 +11,7 @@ import dev.mathbook3948.scope.domain.guild.thread.GuildThreadEventInfo;
 import dev.mathbook3948.scope.utils.CommonUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReference;
 import net.dv8tion.jda.api.entities.User;
@@ -55,6 +57,15 @@ public class JdaMapper {
             GuildChannelType.from(channel.getType().name()),
             parentId,
             position
+        );
+    }
+
+    public static GuildMemberInfo toMemberInfo(Member member) {
+        return new GuildMemberInfo(
+            member.getIdLong(),
+            member.getEffectiveName(),
+            member.getEffectiveAvatarUrl(),
+            member.getTimeCreated().toInstant()
         );
     }
 

@@ -50,7 +50,7 @@ public class GuildEventListener extends ListenerAdapter {
 
         event.getGuild().loadMembers().onSuccess(members -> {
             List<GuildMemberInfo> guildMemberInfos = members.stream()
-                .map(member -> new GuildMemberInfo(member.getIdLong(), member.getEffectiveName(), member.getEffectiveAvatarUrl()))
+                .map(JdaMapper::toMemberInfo)
                 .toList();
             guildMemberFacade.upsertMembers(event.getGuild().getIdLong(), guildMemberInfos);
         }).onError(e -> log.error("Failed to load members for guild {}", event.getGuild().getIdLong(), e));

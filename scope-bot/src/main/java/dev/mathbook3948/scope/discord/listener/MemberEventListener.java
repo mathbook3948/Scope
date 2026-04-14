@@ -1,5 +1,6 @@
 package dev.mathbook3948.scope.discord.listener;
 
+import dev.mathbook3948.scope.discord.utils.JdaMapper;
 import dev.mathbook3948.scope.facade.GuildMemberFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ public class MemberEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-        guildMemberFacade.onGuildMemberJoin(event.getGuild().getIdLong(), event.getMember().getIdLong(), event.getMember().getEffectiveName(), event.getMember().getEffectiveAvatarUrl());
+        guildMemberFacade.onGuildMemberJoin(event.getGuild().getIdLong(), JdaMapper.toMemberInfo(event.getMember()));
     }
 
     @Override
@@ -28,6 +29,6 @@ public class MemberEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberUpdate(GuildMemberUpdateEvent event) {
-        guildMemberFacade.upsertMember(event.getGuild().getIdLong(), event.getMember().getIdLong(), event.getMember().getEffectiveName(), event.getMember().getEffectiveAvatarUrl());
+        guildMemberFacade.upsertMember(event.getGuild().getIdLong(), JdaMapper.toMemberInfo(event.getMember()));
     }
 }

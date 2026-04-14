@@ -29,8 +29,8 @@ public class GuildMemberFacade {
     private final GuildService guildService;
 
     @Transactional
-    public void upsertMember(Long guildId, Long memberId, String name, String avatarUrl) {
-        guildMemberService.upsertGuildMember(guildId, memberId, name, avatarUrl);
+    public void upsertMember(Long guildId, GuildMemberInfo info) {
+        guildMemberService.upsertGuildMember(guildId, info);
     }
 
     @Transactional
@@ -39,9 +39,9 @@ public class GuildMemberFacade {
     }
 
     @Transactional
-    public void onGuildMemberJoin(Long guildId, Long memberId, String name, String avatarUrl) {
-        guildMemberService.upsertGuildMember(guildId, memberId, name, avatarUrl);
-        guildMemberEventService.createMemberEvent(guildId, memberId, GuildMemberEventType.JOIN);
+    public void onGuildMemberJoin(Long guildId, GuildMemberInfo info) {
+        guildMemberService.upsertGuildMember(guildId, info);
+        guildMemberEventService.createMemberEvent(guildId, info.memberId(), GuildMemberEventType.JOIN);
     }
 
     @Transactional

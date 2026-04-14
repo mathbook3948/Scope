@@ -27,14 +27,21 @@ public class GuildMemberService {
     }
 
     @Transactional
-    public GuildMember upsertGuildMember(Long guildId, Long memberId, String name, String avatarUrl) {
-        return guildMemberRepository.findByGuild_GuildIdAndMemberId(guildId, memberId)
+    public GuildMember upsertGuildMember(Long guildId, GuildMemberInfo info) {
+        return guildMemberRepository.findByGuild_GuildIdAndMemberId(guildId, info.memberId())
             .map(member -> {
-                member.updateName(name);
-                member.updateAvatarUrl(avatarUrl);
+                member.updateName(info.name());
+                member.updateAvatarUrl(info.avatarUrl());
                 return member;
             })
-            .orElseGet(() -> guildMemberRepository.save(GuildMember.of(guildRepository.getReferenceById(guildId), memberId, name, avatarUrl)));
+            .orElseGet(() -> guildMemberRepository.save(
+                GuildMember.of(
+                    guildRepository.getReferenceById(guildId),
+                    info.memberId(),
+                    info.name(),
+                    info.avatarUrl(),
+                    info.accountCreatedAt()
+                )));
     }
 
     @Transactional
@@ -82,7 +89,7 @@ public class GuildMemberService {
         if (!newMemberInfos.isEmpty()) {
             Guild guildRef = guildRepository.getReferenceById(guildId);
             List<GuildMember> newMembers = newMemberInfos.stream()
-                .map(info -> GuildMember.of(guildRef, info.memberId(), info.name(), info.avatarUrl()))
+                .map(info -> GuildMember.of(guildRef, info.memberId(), info.name(), info.avatarUrl(), info.accountCreatedAt()))
                 .toList();
             guildMemberRepository.saveAll(newMembers);
         }
