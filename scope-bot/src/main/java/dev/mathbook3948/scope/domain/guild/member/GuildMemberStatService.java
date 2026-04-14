@@ -41,11 +41,6 @@ public class GuildMemberStatService {
     }
 
     @Transactional
-    public void createGuildMemberStat(Long guildId, int joinedMembers, int leftMembers, int totalMembers, Instant createdAt) {
-        guildMemberStatRepository.save(GuildMemberStat.of(guildId, joinedMembers, leftMembers, totalMembers, createdAt));
-    }
-
-    @Transactional
     public void createGuildMemberStats(List<GuildMemberStat> stats) {
         guildMemberStatRepository.saveAll(stats);
     }
