@@ -2,6 +2,7 @@ package dev.mathbook3948.scope.domain.guild.member;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -42,5 +43,10 @@ public class GuildMemberStatService {
     @Transactional
     public void createGuildMemberStat(Long guildId, int joinedMembers, int leftMembers, int totalMembers, Instant createdAt) {
         guildMemberStatRepository.save(GuildMemberStat.of(guildId, joinedMembers, leftMembers, totalMembers, createdAt));
+    }
+
+    @Transactional
+    public void createGuildMemberStats(List<GuildMemberStat> stats) {
+        guildMemberStatRepository.saveAll(stats);
     }
 }
