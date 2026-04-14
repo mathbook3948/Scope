@@ -16,7 +16,12 @@ public class GuildVoiceStatService {
 
     @Transactional
     public void createGuildVoiceStat(GuildVoiceEventInfo info, long duration) {
-        guildVoiceStatRepository.save(GuildVoiceStat.of(info, duration));
+        guildVoiceStatRepository.save(GuildVoiceStat.builder()
+            .guildId(info.guildId())
+            .channelId(info.channelId())
+            .memberId(info.memberId())
+            .duration(duration)
+            .build());
     }
 
     @Transactional

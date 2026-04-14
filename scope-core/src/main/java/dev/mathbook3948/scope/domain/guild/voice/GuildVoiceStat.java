@@ -13,6 +13,8 @@ import jakarta.persistence.Index;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,6 +27,8 @@ import lombok.NoArgsConstructor;
         @Index(name = "idx_voice_stat_guild_id", columnList = "guild_id")
 })
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GuildVoiceStat {
 
@@ -49,13 +53,4 @@ public class GuildVoiceStat {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
-    public static GuildVoiceStat of(GuildVoiceEventInfo info, long duration) {
-        GuildVoiceStat stat = new GuildVoiceStat();
-        stat.guildId = info.guildId();
-        stat.channelId = info.channelId();
-        stat.memberId = info.memberId();
-        stat.duration = duration;
-        return stat;
-    }
 }

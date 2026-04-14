@@ -13,6 +13,8 @@ import jakarta.persistence.Index;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,6 +28,8 @@ import lombok.NoArgsConstructor;
                 columnList = "guild_id, member_id, created_at DESC")
 })
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GuildVoiceEvent {
 
@@ -50,14 +54,4 @@ public class GuildVoiceEvent {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
-    public static GuildVoiceEvent of(GuildVoiceEventInfo info, GuildVoiceEventType eventType) {
-        GuildVoiceEvent event = new GuildVoiceEvent();
-        event.guildId = info.guildId();
-        event.channelId = info.channelId();
-        event.memberId = info.memberId();
-        event.eventType = eventType;
-        event.createdAt = info.createdAt();
-        return event;
-    }
 }

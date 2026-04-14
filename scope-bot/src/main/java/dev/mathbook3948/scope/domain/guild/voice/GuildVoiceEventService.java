@@ -17,7 +17,13 @@ public class GuildVoiceEventService {
 
     @Transactional
     public void createGuildVoiceEvent(GuildVoiceEventInfo info, GuildVoiceEventType eventType) {
-        guildVoiceEventRepository.save(GuildVoiceEvent.of(info, eventType));
+        guildVoiceEventRepository.save(GuildVoiceEvent.builder()
+            .guildId(info.guildId())
+            .channelId(info.channelId())
+            .memberId(info.memberId())
+            .eventType(eventType)
+            .createdAt(info.createdAt())
+            .build());
     }
 
     @Transactional
