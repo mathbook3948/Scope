@@ -162,7 +162,7 @@ public class JdaMapper {
                 : GuildMessageSourceType.THREAD;
         }
 
-        //TODO MEDIA도 처리필요
+        //TODO MEDIA도 처리필요. BETA여서 후에 처리 예정
 
         return GuildMessageSourceType.CHANNEL;
     }
