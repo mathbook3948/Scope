@@ -38,7 +38,7 @@ logging:
 
 scope:
   discord:
-    token: DISCORD_TOKEN_EXAMPLE
+    token: ""
   job:
     guild-member-stat:
       cron: "0 * * * *"
