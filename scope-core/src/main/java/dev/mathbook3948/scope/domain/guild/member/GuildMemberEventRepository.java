@@ -12,8 +12,19 @@ public interface GuildMemberEventRepository extends JpaRepository<GuildMemberEve
 
     int countByGuildIdAndEventTypeAndCreatedAtAfter(Long guildId, GuildMemberEventType eventType, Instant after);
 
-    @Query("SELECT e FROM GuildMemberEvent e WHERE e.createdAt > :since")
-    List<GuildMemberEvent> findAllAfter(@Param("since") Instant since);
+    @Query("""
+            SELECT e.guildId, e.eventType, COUNT(e)
+            FROM GuildMemberEvent e
+            WHERE e.guildId IN :guildIds
+              AND e.createdAt > :since
+              AND e.createdAt <= :runAt
+            GROUP BY e.guildId, e.eventType
+            """)
+    List<Object[]> countByGuildAndTypeAfter(
+        @Param("guildIds") List<Long> guildIds,
+        @Param("since") Instant since,
+        @Param("runAt") Instant runAt
+    );
 
     @Modifying
     @Query("DELETE FROM GuildMemberEvent e WHERE e.guildId = :guildId")

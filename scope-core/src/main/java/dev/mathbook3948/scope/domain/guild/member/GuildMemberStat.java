@@ -3,8 +3,6 @@ package dev.mathbook3948.scope.domain.guild.member;
 
 import java.time.Instant;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,16 +38,16 @@ public class GuildMemberStat {
     @Column(name = "total_members", nullable = false)
     private Integer totalMembers;
 
-    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    public static GuildMemberStat of(Long guildId, Integer joinedMembers, Integer leftMembers, Integer totalMembers) {
+    public static GuildMemberStat of(Long guildId, Integer joinedMembers, Integer leftMembers, Integer totalMembers, Instant createdAt) {
         GuildMemberStat stat = new GuildMemberStat();
         stat.guildId = guildId;
         stat.joinedMembers = joinedMembers;
         stat.leftMembers = leftMembers;
         stat.totalMembers = totalMembers;
+        stat.createdAt = createdAt;
         return stat;
     }
 }

@@ -16,7 +16,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "t_scp_guild_member_event", indexes = {
     @Index(name = "idx_guild_member_event_created_at", columnList = "created_at"),
-    @Index(name = "idx_guild_member_event_guild_id", columnList = "guild_id")
+    @Index(name = "idx_guild_member_event_guild_id_created_at_event_type",
+        columnList = "guild_id, created_at, event_type")
 })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -19,8 +19,8 @@ public class GuildMemberEventService {
         return guildMemberEventRepository.countByGuildIdAndEventTypeAndCreatedAtAfter(guildId, eventType, after);
     }
 
-    public List<GuildMemberEvent> findAllAfter(Instant since) {
-        return guildMemberEventRepository.findAllAfter(since);
+    public List<Object[]> countByGuildAndTypeAfter(List<Long> guildIds, Instant since, Instant runAt) {
+        return guildMemberEventRepository.countByGuildAndTypeAfter(guildIds, since, runAt);
     }
 
     @Transactional
