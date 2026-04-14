@@ -36,7 +36,13 @@ class GuildMemberServiceTest {
         // given
         Long guildId = 1L;
         Guild guildRef = Guild.of(guildId, "TestGuild", null);
-        GuildMember existing = GuildMember.of(guildRef, 101L, "OldName", "old.png", ACCOUNT_CREATED);
+        GuildMember existing = GuildMember.builder()
+            .guild(guildRef)
+            .memberId(101L)
+            .name("OldName")
+            .avatarUrl("old.png")
+            .accountCreatedAt(ACCOUNT_CREATED)
+            .build();
 
         when(guildMemberRepository.findByGuild_GuildIdAndMemberIdIn(guildId, List.of(101L, 102L)))
             .thenReturn(List.of(existing));
@@ -70,7 +76,13 @@ class GuildMemberServiceTest {
         // given
         Long guildId = 1L;
         Guild guildRef = Guild.of(guildId, "TestGuild", null);
-        GuildMember existing = GuildMember.of(guildRef, 101L, "Name", "avatar.png", ACCOUNT_CREATED);
+        GuildMember existing = GuildMember.builder()
+            .guild(guildRef)
+            .memberId(101L)
+            .name("Name")
+            .avatarUrl("avatar.png")
+            .accountCreatedAt(ACCOUNT_CREATED)
+            .build();
 
         when(guildMemberRepository.findByGuild_GuildIdAndMemberIdIn(guildId, List.of(101L)))
             .thenReturn(List.of(existing));

@@ -35,6 +35,10 @@ public class GuildMemberEventService {
 
     @Transactional
     public void createMemberEvent(Long guildId, Long memberId, GuildMemberEventType eventType) {
-        guildMemberEventRepository.save(GuildMemberEvent.of(guildId, memberId, eventType));
+        guildMemberEventRepository.save(GuildMemberEvent.builder()
+            .guildId(guildId)
+            .memberId(memberId)
+            .eventType(eventType)
+            .build());
     }
 }

@@ -5,6 +5,8 @@ import java.time.Instant;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +19,8 @@ import lombok.NoArgsConstructor;
     @Index(name = "idx_guild_member_stat_guild_id", columnList = "guild_id")
 })
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GuildMemberStat {
 
@@ -40,14 +44,4 @@ public class GuildMemberStat {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
-    public static GuildMemberStat of(Long guildId, Integer joinedMembers, Integer leftMembers, Integer totalMembers, Instant createdAt) {
-        GuildMemberStat stat = new GuildMemberStat();
-        stat.guildId = guildId;
-        stat.joinedMembers = joinedMembers;
-        stat.leftMembers = leftMembers;
-        stat.totalMembers = totalMembers;
-        stat.createdAt = createdAt;
-        return stat;
-    }
 }

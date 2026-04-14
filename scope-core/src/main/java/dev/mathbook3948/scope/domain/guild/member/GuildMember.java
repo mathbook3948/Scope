@@ -3,6 +3,8 @@ package dev.mathbook3948.scope.domain.guild.member;
 import dev.mathbook3948.scope.domain.guild.Guild;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +18,8 @@ import org.hibernate.annotations.UpdateTimestamp;
     @UniqueConstraint(columnNames = {"guild_id", "member_id"})
 })
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GuildMember {
 
@@ -48,16 +52,6 @@ public class GuildMember {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, updatable = true)
     private Instant updatedAt;
-
-    public static GuildMember of(Guild guild, Long memberId, String name, String avatarUrl, Instant accountCreatedAt) {
-        GuildMember guildMember = new GuildMember();
-        guildMember.guild = guild;
-        guildMember.memberId = memberId;
-        guildMember.name = name;
-        guildMember.avatarUrl = avatarUrl;
-        guildMember.accountCreatedAt = accountCreatedAt;
-        return guildMember;
-    }
 
     public void updateName(String name) {
         this.name = name;

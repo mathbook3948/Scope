@@ -7,6 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +22,8 @@ import lombok.NoArgsConstructor;
         columnList = "guild_id, created_at, event_type")
 })
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GuildMemberEvent {
 
@@ -42,12 +46,4 @@ public class GuildMemberEvent {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
-    public static GuildMemberEvent of(Long guildId, Long memberId, GuildMemberEventType eventType) {
-        GuildMemberEvent event = new GuildMemberEvent();
-        event.guildId = guildId;
-        event.memberId = memberId;
-        event.eventType = eventType;
-        return event;
-    }
 }

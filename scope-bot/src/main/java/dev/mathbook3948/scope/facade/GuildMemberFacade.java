@@ -120,7 +120,13 @@ public class GuildMemberFacade {
             int left = counts.getOrDefault(GuildMemberEventType.LEAVE, 0);
             int total = totalMembers.getOrDefault(guildId, 0L).intValue();
 
-            stats.add(GuildMemberStat.of(guildId, joined, left, total, runAt));
+            stats.add(GuildMemberStat.builder()
+                .guildId(guildId)
+                .joinedMembers(joined)
+                .leftMembers(left)
+                .totalMembers(total)
+                .createdAt(runAt)
+                .build());
         }
         guildMemberStatService.createGuildMemberStats(stats);
     }

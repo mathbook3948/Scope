@@ -30,13 +30,13 @@ public class GuildMemberService {
                 return member;
             })
             .orElseGet(() -> guildMemberRepository.save(
-                GuildMember.of(
-                    guildRepository.getReferenceById(guildId),
-                    info.memberId(),
-                    info.name(),
-                    info.avatarUrl(),
-                    info.accountCreatedAt()
-                )));
+                GuildMember.builder()
+                    .guild(guildRepository.getReferenceById(guildId))
+                    .memberId(info.memberId())
+                    .name(info.name())
+                    .avatarUrl(info.avatarUrl())
+                    .accountCreatedAt(info.accountCreatedAt())
+                    .build()));
     }
 
     @Transactional
@@ -80,7 +80,13 @@ public class GuildMemberService {
         if (!newMemberInfos.isEmpty()) {
             Guild guildRef = guildRepository.getReferenceById(guildId);
             List<GuildMember> newMembers = newMemberInfos.stream()
-                .map(info -> GuildMember.of(guildRef, info.memberId(), info.name(), info.avatarUrl(), info.accountCreatedAt()))
+                .map(info -> GuildMember.builder()
+                    .guild(guildRef)
+                    .memberId(info.memberId())
+                    .name(info.name())
+                    .avatarUrl(info.avatarUrl())
+                    .accountCreatedAt(info.accountCreatedAt())
+                    .build())
                 .toList();
             guildMemberRepository.saveAll(newMembers);
         }
