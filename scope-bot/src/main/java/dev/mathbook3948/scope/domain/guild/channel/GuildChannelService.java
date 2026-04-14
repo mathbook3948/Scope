@@ -31,7 +31,14 @@ public class GuildChannelService {
                     channel.updatePosition(info.position());
                 },
                 () -> guildChannelRepository.save(
-                    GuildChannel.of(guildRepository.getReferenceById(guildId), info.channelId(), info.name(), info.channelType(), info.parentChannelId(), info.position())
+                    GuildChannel.builder()
+                        .guild(guildRepository.getReferenceById(guildId))
+                        .channelId(info.channelId())
+                        .name(info.name())
+                        .channelType(info.channelType())
+                        .parentChannelId(info.parentChannelId())
+                        .position(info.position())
+                        .build()
                 )
             );
     }
@@ -70,7 +77,14 @@ public class GuildChannelService {
         if (!newChannelInfos.isEmpty()) {
             Guild guildRef = guildRepository.getReferenceById(guildId);
             List<GuildChannel> newChannels = newChannelInfos.stream()
-                .map(info -> GuildChannel.of(guildRef, info.channelId(), info.name(), info.channelType(), info.parentChannelId(), info.position()))
+                .map(info -> GuildChannel.builder()
+                    .guild(guildRef)
+                    .channelId(info.channelId())
+                    .name(info.name())
+                    .channelType(info.channelType())
+                    .parentChannelId(info.parentChannelId())
+                    .position(info.position())
+                    .build())
                 .toList();
             guildChannelRepository.saveAll(newChannels);
         }

@@ -33,7 +33,13 @@ class GuildChannelServiceTest {
         // given
         Long guildId = 1L;
         Guild guildRef = Guild.of(guildId, "TestGuild", null);
-        GuildChannel existing = GuildChannel.of(guildRef, 100L, "OldName", GuildChannelType.TEXT, null, 0);
+        GuildChannel existing = GuildChannel.builder()
+            .guild(guildRef)
+            .channelId(100L)
+            .name("OldName")
+            .channelType(GuildChannelType.TEXT)
+            .position(0)
+            .build();
 
         when(guildChannelRepository.findByGuild_GuildIdAndChannelIdIn(guildId, List.of(100L, 200L)))
             .thenReturn(List.of(existing));
@@ -68,7 +74,14 @@ class GuildChannelServiceTest {
         // given
         Long guildId = 1L;
         Guild guildRef = Guild.of(guildId, "TestGuild", null);
-        GuildChannel existing = GuildChannel.of(guildRef, 100L, "General", GuildChannelType.TEXT, 50L, 3);
+        GuildChannel existing = GuildChannel.builder()
+            .guild(guildRef)
+            .channelId(100L)
+            .name("General")
+            .channelType(GuildChannelType.TEXT)
+            .parentChannelId(50L)
+            .position(3)
+            .build();
 
         when(guildChannelRepository.findByGuild_GuildIdAndChannelIdIn(guildId, List.of(100L)))
             .thenReturn(List.of(existing));
@@ -95,7 +108,14 @@ class GuildChannelServiceTest {
         // given
         Long guildId = 1L;
         Guild guildRef = Guild.of(guildId, "TestGuild", null);
-        GuildChannel existing = GuildChannel.of(guildRef, 100L, "General", GuildChannelType.TEXT, 50L, 3);
+        GuildChannel existing = GuildChannel.builder()
+            .guild(guildRef)
+            .channelId(100L)
+            .name("General")
+            .channelType(GuildChannelType.TEXT)
+            .parentChannelId(50L)
+            .position(3)
+            .build();
 
         when(guildChannelRepository.findByGuild_GuildIdAndChannelIdIn(guildId, List.of(100L)))
             .thenReturn(List.of(existing));

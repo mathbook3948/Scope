@@ -3,6 +3,8 @@ package dev.mathbook3948.scope.domain.guild.channel;
 import dev.mathbook3948.scope.domain.guild.Guild;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +18,8 @@ import org.hibernate.annotations.UpdateTimestamp;
     @UniqueConstraint(columnNames = {"guild_id", "channel_id"})
 })
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GuildChannel {
 
@@ -52,17 +56,6 @@ public class GuildChannel {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, updatable = true)
     private Instant updatedAt;
-
-    public static GuildChannel of(Guild guild, Long channelId, String name, GuildChannelType channelType, Long parentChannelId, Integer position) {
-        GuildChannel guildChannel = new GuildChannel();
-        guildChannel.guild = guild;
-        guildChannel.channelId = channelId;
-        guildChannel.name = name;
-        guildChannel.channelType = channelType;
-        guildChannel.parentChannelId = parentChannelId;
-        guildChannel.position = position;
-        return guildChannel;
-    }
 
     public void updateName(String name) {
         this.name = name;
