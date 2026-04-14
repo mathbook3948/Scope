@@ -27,8 +27,8 @@ public class GuildMemberService {
     }
 
     @Transactional
-    public GuildMember upsertGuildMember(Long guildId, GuildMemberInfo info) {
-        return guildMemberRepository.findByGuild_GuildIdAndMemberId(guildId, info.memberId())
+    public void upsertGuildMember(Long guildId, GuildMemberInfo info) {
+        guildMemberRepository.findByGuild_GuildIdAndMemberId(guildId, info.memberId())
             .map(member -> {
                 member.updateName(info.name());
                 member.updateAvatarUrl(info.avatarUrl());
