@@ -16,7 +16,15 @@ public class GuildReactionEventService {
 
     @Transactional
     public void createGuildReactionEvent(GuildReactionEventInfo reaction, GuildReactionEventType eventType) {
-        guildReactionEventRepository.save(GuildReactionEvent.of(reaction, eventType));
+        guildReactionEventRepository.save(GuildReactionEvent.builder()
+            .guildId(reaction.guildId())
+            .channelId(reaction.channelId())
+            .messageId(reaction.messageId())
+            .memberId(reaction.memberId())
+            .emoji(reaction.emoji())
+            .eventType(eventType)
+            .authorType(reaction.authorType())
+            .build());
     }
 
     @Transactional

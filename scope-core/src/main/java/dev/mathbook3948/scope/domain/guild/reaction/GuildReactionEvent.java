@@ -7,6 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import dev.mathbook3948.scope.domain.guild.AuthorType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +21,8 @@ import lombok.NoArgsConstructor;
     @Index(name = "idx_reaction_event_guild_id", columnList = "guild_id")
 })
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GuildReactionEvent {
 
@@ -54,16 +58,4 @@ public class GuildReactionEvent {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
-    public static GuildReactionEvent of(GuildReactionEventInfo reaction, GuildReactionEventType eventType) {
-        GuildReactionEvent event = new GuildReactionEvent();
-        event.guildId = reaction.guildId();
-        event.channelId = reaction.channelId();
-        event.messageId = reaction.messageId();
-        event.memberId = reaction.memberId();
-        event.emoji = reaction.emoji();
-        event.eventType = eventType;
-        event.authorType = reaction.authorType();
-        return event;
-    }
 }
