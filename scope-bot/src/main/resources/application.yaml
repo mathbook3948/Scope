@@ -6,7 +6,7 @@ spring:
   datasource:
     url: ${SCOPE_DB_URL:jdbc:postgresql://localhost:5432/postgres}
     username: ${SCOPE_DB_USER:postgres}
-    password: ${SCOPE_DB_PASSWORD:}
+    password: ${SCOPE_DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update

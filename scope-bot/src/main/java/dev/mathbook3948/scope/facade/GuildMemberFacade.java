@@ -8,6 +8,7 @@ import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventService;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberEventType;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberInfo;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberService;
+import dev.mathbook3948.scope.domain.guild.member.GuildMemberStat;
 import dev.mathbook3948.scope.domain.guild.member.GuildMemberStatService;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +21,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class GuildMemberFacade {
 
     private final GuildMemberService guildMemberService;
@@ -115,14 +117,16 @@ public class GuildMemberFacade {
         // 길드별 현재 총 멤버 수
         Map<Long, Long> totalMembers = guildMemberService.countPerGuild();
 
-        // 각 길드별로 stat insert
+        // 각 길드별 stat을 누적 후 배치 insert
+        List<GuildMemberStat> stats = new ArrayList<>(guildIds.size());
         for (Long guildId : guildIds) {
             Map<GuildMemberEventType, Integer> counts = eventCounts.getOrDefault(guildId, Map.of());
             int joined = counts.getOrDefault(GuildMemberEventType.JOIN, 0);
             int left = counts.getOrDefault(GuildMemberEventType.LEAVE, 0);
             int total = totalMembers.getOrDefault(guildId, 0L).intValue();
 
-            guildMemberStatService.createGuildMemberStat(guildId, joined, left, total, runAt);
+            stats.add(GuildMemberStat.of(guildId, joined, left, total, runAt));
         }
+        guildMemberStatService.createGuildMemberStats(stats);
     }
 }

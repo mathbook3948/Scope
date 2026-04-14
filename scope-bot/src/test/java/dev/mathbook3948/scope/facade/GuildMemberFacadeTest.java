@@ -57,7 +57,13 @@ class GuildMemberFacadeTest {
         guildMemberFacade.aggregateGuildMemberStats();
 
         // then
-        verify(guildMemberStatService).createGuildMemberStat(eq(guildId), eq(2), eq(1), eq(1), any(Instant.class));
+        List<GuildMemberStat> stats = captureCreatedStats();
+        assertThat(stats).hasSize(1);
+        GuildMemberStat stat = stats.get(0);
+        assertThat(stat.getGuildId()).isEqualTo(guildId);
+        assertThat(stat.getJoinedMembers()).isEqualTo(2);
+        assertThat(stat.getLeftMembers()).isEqualTo(1);
+        assertThat(stat.getTotalMembers()).isEqualTo(1);
         verifyNoMoreInteractions(guildMemberStatService, guildMemberEventService, guildMemberService);
     }
 
@@ -78,7 +84,13 @@ class GuildMemberFacadeTest {
         guildMemberFacade.aggregateGuildMemberStats();
 
         // then
-        verify(guildMemberStatService).createGuildMemberStat(eq(guildId), eq(0), eq(0), eq(10), any(Instant.class));
+        List<GuildMemberStat> stats = captureCreatedStats();
+        assertThat(stats).hasSize(1);
+        GuildMemberStat stat = stats.get(0);
+        assertThat(stat.getGuildId()).isEqualTo(guildId);
+        assertThat(stat.getJoinedMembers()).isEqualTo(0);
+        assertThat(stat.getLeftMembers()).isEqualTo(0);
+        assertThat(stat.getTotalMembers()).isEqualTo(10);
         verifyNoMoreInteractions(guildMemberStatService, guildMemberEventService, guildMemberService);
     }
 
@@ -105,8 +117,16 @@ class GuildMemberFacadeTest {
 
         // then
         verify(guildMemberEventService, times(1)).countByGuildAndTypeAfter(any(), any(), any());
-        verify(guildMemberStatService).createGuildMemberStat(eq(guild1), eq(3), eq(0), eq(20), any(Instant.class));
-        verify(guildMemberStatService).createGuildMemberStat(eq(guild2), eq(0), eq(1), eq(5), any(Instant.class));
+        List<GuildMemberStat> stats = captureCreatedStats();
+        assertThat(stats).hasSize(2);
+        GuildMemberStat stat1 = stats.stream().filter(s -> s.getGuildId().equals(guild1)).findFirst().orElseThrow();
+        assertThat(stat1.getJoinedMembers()).isEqualTo(3);
+        assertThat(stat1.getLeftMembers()).isEqualTo(0);
+        assertThat(stat1.getTotalMembers()).isEqualTo(20);
+        GuildMemberStat stat2 = stats.stream().filter(s -> s.getGuildId().equals(guild2)).findFirst().orElseThrow();
+        assertThat(stat2.getJoinedMembers()).isEqualTo(0);
+        assertThat(stat2.getLeftMembers()).isEqualTo(1);
+        assertThat(stat2.getTotalMembers()).isEqualTo(5);
         verifyNoMoreInteractions(guildMemberStatService, guildMemberEventService, guildMemberService);
     }
 
@@ -137,8 +157,16 @@ class GuildMemberFacadeTest {
         guildMemberFacade.aggregateGuildMemberStats();
 
         // then
-        verify(guildMemberStatService).createGuildMemberStat(eq(guildWithHistory), eq(1), eq(0), eq(20), any(Instant.class));
-        verify(guildMemberStatService).createGuildMemberStat(eq(guildWithoutHistory), eq(1), eq(1), eq(5), any(Instant.class));
+        List<GuildMemberStat> stats = captureCreatedStats();
+        assertThat(stats).hasSize(2);
+        GuildMemberStat statWithHistory = stats.stream().filter(s -> s.getGuildId().equals(guildWithHistory)).findFirst().orElseThrow();
+        assertThat(statWithHistory.getJoinedMembers()).isEqualTo(1);
+        assertThat(statWithHistory.getLeftMembers()).isEqualTo(0);
+        assertThat(statWithHistory.getTotalMembers()).isEqualTo(20);
+        GuildMemberStat statWithoutHistory = stats.stream().filter(s -> s.getGuildId().equals(guildWithoutHistory)).findFirst().orElseThrow();
+        assertThat(statWithoutHistory.getJoinedMembers()).isEqualTo(1);
+        assertThat(statWithoutHistory.getLeftMembers()).isEqualTo(1);
+        assertThat(statWithoutHistory.getTotalMembers()).isEqualTo(5);
         verifyNoMoreInteractions(guildMemberStatService, guildMemberEventService, guildMemberService);
     }
 
@@ -161,16 +189,14 @@ class GuildMemberFacadeTest {
         guildMemberFacade.aggregateGuildMemberStats();
 
         // then
-        ArgumentCaptor<Instant> statCreatedAtCaptor = ArgumentCaptor.forClass(Instant.class);
-        verify(guildMemberStatService, times(2))
-            .createGuildMemberStat(anyLong(), anyInt(), anyInt(), anyInt(), statCreatedAtCaptor.capture());
-        List<Instant> statCreatedAts = statCreatedAtCaptor.getAllValues();
-        assertThat(statCreatedAts).hasSize(2);
-        assertThat(statCreatedAts.get(0)).isEqualTo(statCreatedAts.get(1));
+        List<GuildMemberStat> stats = captureCreatedStats();
+        assertThat(stats).hasSize(2);
+        Instant firstCreatedAt = stats.get(0).getCreatedAt();
+        assertThat(stats).allMatch(s -> s.getCreatedAt().equals(firstCreatedAt));
 
         ArgumentCaptor<Instant> queryRunAtCaptor = ArgumentCaptor.forClass(Instant.class);
         verify(guildMemberEventService).countByGuildAndTypeAfter(any(), any(), queryRunAtCaptor.capture());
-        assertThat(queryRunAtCaptor.getValue()).isEqualTo(statCreatedAts.get(0));
+        assertThat(queryRunAtCaptor.getValue()).isEqualTo(firstCreatedAt);
     }
 
     @Test
@@ -194,4 +220,15 @@ class GuildMemberFacadeTest {
             && list.size() == expected.length
             && list.containsAll(List.of(expected));
     }
+
+    /**
+     * createGuildMemberStats 단일 호출에 전달된 List를 캡처. 배치 insert 검증용.
+     */
+    @SuppressWarnings("unchecked")
+    private List<GuildMemberStat> captureCreatedStats() {
+        ArgumentCaptor<List<GuildMemberStat>> captor = ArgumentCaptor.forClass(List.class);
+        verify(guildMemberStatService).createGuildMemberStats(captor.capture());
+        return captor.getValue();
+    }
+
 }
